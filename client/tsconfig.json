@@ -1,0 +1,24 @@
+{
+    "compilerOptions": {
+      "target": "es6",                    /* Specify ECMAScript target version */
+      "module": "commonjs",               /* Specify module code generation */
+      "strict": true,                     /* Enable all strict type-checking options */
+      "esModuleInterop": true,            /* Enable interoperability between CommonJS and ES Modules */
+      "skipLibCheck": true,               /* Skip type checking of declaration files */
+      "forceConsistentCasingInFileNames": true,  /* Ensure consistent file casing */
+      "jsx": "react",                     /* Specify JSX syntax */
+      "outDir": "./dist",                 /* Redirect output structure to the directory */
+      "baseUrl": "./src",                 /* Base directory to resolve non-relative module names */
+      "paths": {
+        "@/*": ["*"]                      /* Path mapping for custom module aliases */
+      }
+    },
+    "include": [
+      "src/**/*.ts",                     /* Include TypeScript files from src directory */
+      "src/**/*.tsx"
+    ],
+    "exclude": [
+      "node_modules"                     /* Exclude node_modules directory */
+    ]
+  }
+  
