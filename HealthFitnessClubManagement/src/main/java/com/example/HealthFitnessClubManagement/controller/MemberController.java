@@ -1,11 +1,12 @@
 package com.example.HealthFitnessClubManagement.controller;
 
+import com.example.HealthFitnessClubManagement.model.FitnessGoals;
 import com.example.HealthFitnessClubManagement.model.Member;
-import com.example.HealthFitnessClubManagement.service.MemberService;
+import com.example.HealthFitnessClubManagement.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-
 
 @RestController
 @RequestMapping("/members")
@@ -16,10 +17,89 @@ public class MemberController {
     private MemberService memberService;
 
     @PostMapping("/register")
-    public ResponseEntity<int[]> registerUser(@RequestBody Member request) {
-        int[] result = memberService.userRegistration(request.getFirstName(), request.getLastName(),
-                request.getEmail(), request.getPhoneNumber(),
+    public ResponseEntity<String> registerUser(@RequestBody Member request) {
+        ResponseEntity<String> response = memberService.userRegistration(request.getFirstName(), request.getLastName(),
+                request.getPhoneNumber(), request.getEmail(), request.getPass_word(),
                 request.getMemberTypeId());
-        return ResponseEntity.ok(result);
+        return response;
     }
+
+    @GetMapping("/{memberEmail}")
+    public ResponseEntity<Member> getMemberInfo(@PathVariable String memberEmail) {
+        Member user = memberService.getMemberInfo(memberEmail);
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PutMapping("/{id}/updateFirstName")
+    public ResponseEntity<String> updateMemberFirstName(@PathVariable Long id, @RequestParam String newFirstName) {
+        try {
+            memberService.updateMemberFirstName(id, newFirstName);
+            return ResponseEntity.ok("Member's first name updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update member's first name");
+        }
+    }
+
+    @PutMapping("/{id}/updateLastName")
+    public ResponseEntity<String> updateMemberLastName(@PathVariable Long id, @RequestParam String newLastName) {
+        try {
+            memberService.updateMemberLastName(id, newLastName);
+            return ResponseEntity.ok("Member's last name updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update member's last name");
+        }
+    }
+
+    @PutMapping("/{id}/updateEmail")
+    public ResponseEntity<String> updateMemberEmail(@PathVariable Long id, @RequestParam String newEmail) {
+        try {
+            memberService.updateMemberEmail(id, newEmail);
+            return ResponseEntity.ok("Member's email updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update member's email");
+        }
+    }
+
+    @PutMapping("/{id}/updatePhoneNumber")
+    public ResponseEntity<String> updateMemberPhoneNumber(@PathVariable Long id, @RequestParam String newPhoneNumber) {
+        try {
+            memberService.updateMemberPhoneNumber(id, newPhoneNumber);
+            return ResponseEntity.ok("Member's phone number updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update member's phone number");
+        }
+    }
+
+    @PutMapping("/{id}/updatePassword")
+    public ResponseEntity<String> updateMemberPassword(@PathVariable Long id, @RequestParam String newPassword) {
+        try {
+            memberService.updateMemberPassword(id, newPassword);
+            return ResponseEntity.ok("Member's password updated successfully");
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update member's password");
+        }
+    }
+
+    @PostMapping("/createGoal")
+    public ResponseEntity<String> createFitnessGoal(@RequestBody FitnessGoals request) {
+        ResponseEntity<String> response = memberService.createFitnessGoal(request.getMember(), request.getGoalDescription(),
+                request.getTargetWeight(),request.getTargetBodyFat(),request.getTargetMuscleMass());
+        return response;
+    }
+
+    @GetMapping("/getGoal")
+    public ResponseEntity<FitnessGoals> getFitnessGoal(@PathVariable Long memberId) {
+        FitnessGoals goal = memberService.findGoalByMember(memberId);
+        if (goal != null) {
+            return ResponseEntity.ok(goal);
+        } else {
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+
 }

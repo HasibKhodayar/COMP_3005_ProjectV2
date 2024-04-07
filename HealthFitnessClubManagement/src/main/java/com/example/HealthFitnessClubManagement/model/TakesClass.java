@@ -6,33 +6,26 @@
 //import java.time.LocalDate;
 //
 //@Entity
-//@Table(name = "Room")
-//public class Room {
+//@Table(name = "TakesClass")
+//public class TakesClass {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "roomID")
-//    private Long id;
-//
-//    @Getter
-//    @Column(name = "room_name", nullable = false)
-//    private String roomName;
-//
-//    @Getter
-//    @Column(name = "capacity", nullable = false)
-//    private int capacity;
+//    @Column(name = "takesID")
+//    private Long takesId;
 //
 //    @Getter
 //    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "classID")
+//    @JoinColumn(name = "memberID", nullable = false)
+//    private Member member;
+//
+//    @Getter
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "classID", nullable = false)
 //    private GroupFitnessClass groupFitnessClass;
 //
 //
-//    public void setRoomName(String roomName) {
-//        this.roomName = roomName;
-//    }
-//
-//    public void setCapacity(int capacity) {
-//        this.capacity = capacity;
+//    public void setMember(Member member) {
+//        this.member = member;
 //    }
 //
 //    public void setGroupFitnessClass(GroupFitnessClass groupFitnessClass) {

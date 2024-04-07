@@ -7,17 +7,16 @@
 //
 //
 //@Entity
-//@Table(name = "PersonalTrainingSession")
-//public class PersonalTrainingSession {
+//@Table(name = "GroupFitnessClass")
+//public class GroupFitnessClass {
 //    @Id
 //    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "sessionID")
+//    @Column(name = "classID")
 //    private Long id;
 //
 //    @Getter
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "memberID")
-//    private Member member;
+//    @Column(name = "class_name", nullable = false)
+//    private String className;
 //
 //    @Getter
 //    @ManyToOne(fetch = FetchType.LAZY)
@@ -32,8 +31,17 @@
 //    @Column(name = "scheduled_time", nullable = false)
 //    private LocalTime scheduledTime;
 //
-//    public void setMember(Member member) {
-//        this.member = member;
+//    @Getter
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "roomID")
+//    private Room room;
+//
+//    @Getter
+//    @Column(name = "number_members", nullable = false)
+//    private int numberMembers;
+//
+//    public void setClassName(String className) {
+//        this.className = className;
 //    }
 //
 //    public void setTrainer(Member trainer) {
@@ -46,5 +54,13 @@
 //
 //    public void setScheduledTime(LocalTime scheduledTime) {
 //        this.scheduledTime = scheduledTime;
+//    }
+//
+//    public void setRoom(Room room) {
+//        this.room = room;
+//    }
+//
+//    public void setNumberMembers(int numberMembers) {
+//        this.numberMembers = numberMembers;
 //    }
 //}

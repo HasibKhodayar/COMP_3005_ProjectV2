@@ -1,22 +1,29 @@
 import React, { useState } from "react";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 const LogIn = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
-      const response = await axios.post("http://localhost:8080/members/login", {
-        username,
-        password,
-      });
+      const response = await axios.get(
+        `http://localhost:8080/members/${username}`
+      );
+      if (response.data.pass_word !== password) {
+        throw new Error("Wrong username or password");
+      }
       setErrorMessage("");
       console.log(response.data);
+      // navigate to dashboard page after successful registration
+      localStorage.setItem("email", username);
+      navigate("/home");
     } catch (error) {
-      setErrorMessage("Failed to register member. Please try again.");
+      setErrorMessage("Wrong username or password. Please try again.");
       console.error(error);
     }
   };
@@ -37,7 +44,7 @@ const LogIn = () => {
           margin: "150px",
         }}
       >
-        <h2>Welcome Back to Fitness Trackr</h2>
+        <h2>Welcome Back to FitnessTrackr</h2>
         <form
           onSubmit={handleSubmit}
           style={{
@@ -53,20 +60,20 @@ const LogIn = () => {
               value={username}
               onChange={(e) => setUsername(e.target.value)}
               placeholder="Email"
-              style={{ width: "300px", height: "40px", fontSize: "15px" }}
+              style={{ width: "300px", height: "25px", fontSize: "15px" }}
               required
             />
             <input
               type="text"
               value={password}
               placeholder="Password"
-              style={{ width: "300px", height: "40px", fontSize: "15px" }}
+              style={{ width: "300px", height: "25px", fontSize: "15px" }}
               onChange={(e) => setPassword(e.target.value)}
               required
             />
           </div>
 
-          <div style={{ paddingTop: "10px" }}>
+          <div style={{ paddingTop: "10px", paddingBottom: "10px" }}>
             {errorMessage && <div>{errorMessage}</div>}
           </div>
 

@@ -1,4 +1,5 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Registration = () => {
@@ -10,36 +11,33 @@ const Registration = () => {
   const [memberType, setMemberType] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [errorMessage, setErrorMessage] = useState("");
-
-  const clearStates = () => {
-    setFirstName("");
-    setLastName("");
-    setEmail("");
-    setPhone("");
-    setMemberType("");
-  };
+  const navigate = useNavigate();
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     try {
+      // send a POST request to the server with user data
       const response = await axios.post(
         "http://localhost:8080/members/register",
         {
           firstName,
           lastName,
           email,
-          password,
-          phone,
+          pass_word: password,
+          phoneNumber: phone,
           memberTypeId: parseInt(memberType),
         }
       );
-      setSuccessMessage("Member registered successfully.");
+      setSuccessMessage(response.data);
       setErrorMessage("");
-      clearStates();
-      console.log(response.data);
-    } catch (error) {
+      console.log("success", response);
+
+      // navigate to dashboard page after successful registration
+      localStorage.setItem("email", email);
+      navigate("/home");
+    } catch (error: any) {
       setSuccessMessage("");
-      setErrorMessage("Failed to register member. Please try again.");
+      setErrorMessage(error.response.data);
       console.error(error);
     }
   };
@@ -85,7 +83,7 @@ const Registration = () => {
                 value={firstName}
                 onChange={(e) => setFirstName(e.target.value)}
                 placeholder="First name"
-                style={{ width: "300px", height: "40px", fontSize: "15px" }}
+                style={{ width: "300px", height: "25px", fontSize: "15px" }}
                 required
               />
               <input
@@ -93,7 +91,7 @@ const Registration = () => {
                 value={lastName}
                 onChange={(e) => setLastName(e.target.value)}
                 placeholder="Last name"
-                style={{ width: "300px", height: "40px", fontSize: "15px" }}
+                style={{ width: "300px", height: "25px", fontSize: "15px" }}
                 required
               />
               <input
@@ -101,7 +99,7 @@ const Registration = () => {
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
                 placeholder="Phone"
-                style={{ width: "300px", height: "40px", fontSize: "15px" }}
+                style={{ width: "300px", height: "25px", fontSize: "15px" }}
                 required
               />
               <input
@@ -109,7 +107,7 @@ const Registration = () => {
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 placeholder="Email"
-                style={{ width: "300px", height: "40px", fontSize: "15px" }}
+                style={{ width: "300px", height: "25px", fontSize: "15px" }}
                 required
               />
               <input
@@ -117,14 +115,14 @@ const Registration = () => {
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
-                style={{ width: "300px", height: "40px", fontSize: "15px" }}
+                style={{ width: "300px", height: "25px", fontSize: "15px" }}
                 required
               />
 
               <select
                 value={memberType}
                 onChange={(e) => setMemberType(e.target.value)}
-                style={{ width: "308px", height: "40px", fontSize: "15px" }}
+                style={{ width: "308px", height: "25px", fontSize: "15px" }}
                 required
               >
                 <option value="">I'm a..</option>
@@ -134,7 +132,7 @@ const Registration = () => {
               </select>
             </div>
 
-            <div style={{ paddingTop: "10px" }}>
+            <div style={{ paddingTop: "10px", paddingBottom: "10px" }}>
               {successMessage && <div>{successMessage}</div>}
               {errorMessage && <div>{errorMessage}</div>}
             </div>
