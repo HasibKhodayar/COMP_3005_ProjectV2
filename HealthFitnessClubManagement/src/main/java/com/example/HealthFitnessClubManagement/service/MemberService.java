@@ -22,7 +22,6 @@ public class MemberService {
             member.setEmail(email);
             member.setPass_word(password);
             member.setPhoneNumber(phone);
-            member.setJoinDate(Date.valueOf(LocalDate.now()));
             member.setMemberTypeId(memberType);
 
             Member savedMember = memberRepository.save(member);

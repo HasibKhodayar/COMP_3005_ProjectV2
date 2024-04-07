@@ -30,33 +30,23 @@ public class Member {
     private String phoneNumber;
 
     @Getter
-    @Column(name = "join_date")
-    private Date joinDate;
+    @Column(name = "pass_word", nullable = false)
+    private String pass_word;
 
     @Getter
     @Column(name = "member_type_ID")
     private Integer memberTypeId;
 
 
-    public void setFirstName(String firstName) {
-        this.firstName = firstName;
-    }
+    public void setFirstName(String firstName) {this.firstName = firstName;}
 
-    public void setLastName(String lastName) {
-        this.lastName = lastName;
-    }
+    public void setLastName(String lastName) {this.lastName = lastName;}
 
-    public void setEmail(String email) {
-        this.email = email;
-    }
+    public void setEmail(String email) {this.email = email;}
 
-    public void setPhoneNumber(String phoneNumber) {
-        this.phoneNumber = phoneNumber;
-    }
+    public void setPhoneNumber(String phoneNumber) {this.phoneNumber = phoneNumber;}
 
-    public void setJoinDate(Date joinDate) {
-        this.joinDate = joinDate;
-    }
+    public void setPass_word(String pass_word) {this.pass_word = pass_word;}
 
     public void setMemberTypeId(Integer memberTypeId) {
         this.memberTypeId = memberTypeId;
