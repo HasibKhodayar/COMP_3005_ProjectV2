@@ -14,12 +14,13 @@ public class MemberService {
     @Autowired
     private MemberRepository memberRepository;
 
-    public int[] userRegistration(String firstName, String lastName, String email, String phone, int memberType) {
+    public int[] userRegistration(String firstName, String lastName, String email, String password, String phone, int memberType) {
         try {
             Member member = new Member();
             member.setFirstName(firstName);
             member.setLastName(lastName);
             member.setEmail(email);
+            member.setPass_word(password);
             member.setPhoneNumber(phone);
             member.setJoinDate(Date.valueOf(LocalDate.now()));
             member.setMemberTypeId(memberType);

@@ -5,6 +5,7 @@ const Registration = () => {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
   const [phone, setPhone] = useState("");
   const [memberType, setMemberType] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
@@ -27,6 +28,7 @@ const Registration = () => {
           firstName,
           lastName,
           email,
+          password,
           phone,
           memberTypeId: parseInt(memberType),
         }
@@ -95,6 +97,14 @@ const Registration = () => {
                 required
               />
               <input
+                type="text"
+                value={phone}
+                onChange={(e) => setPhone(e.target.value)}
+                placeholder="Phone"
+                style={{ width: "300px", height: "40px", fontSize: "15px" }}
+                required
+              />
+              <input
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -103,13 +113,14 @@ const Registration = () => {
                 required
               />
               <input
-                type="text"
-                value={phone}
-                onChange={(e) => setPhone(e.target.value)}
-                placeholder="Phone"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder="Password"
                 style={{ width: "300px", height: "40px", fontSize: "15px" }}
                 required
               />
+
               <select
                 value={memberType}
                 onChange={(e) => setMemberType(e.target.value)}
