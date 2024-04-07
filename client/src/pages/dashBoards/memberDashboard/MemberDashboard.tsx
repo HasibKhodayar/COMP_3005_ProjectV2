@@ -4,6 +4,7 @@ import { Button } from "@mui/material";
 import Dashboard from "./Dashboard";
 import ProfileSettings from "./ProfileSettings";
 import ScheduleManagement from "./ScheduleManagement";
+import GoalsMetrics from "./GoalsMetrics";
 
 const MemberDashboard = ({ user }: { user: any }) => {
   const [activeSection, setActiveSection] = useState<string>("dashboard");
@@ -20,8 +21,8 @@ const MemberDashboard = ({ user }: { user: any }) => {
           backgroundColor: "#F9A826",
           display: "flex",
           flexDirection: "row",
-          gap: "20px",
-          paddingLeft: "20px",
+          gap: "30px",
+          paddingLeft: "40px",
         }}
       >
         <Button
@@ -45,9 +46,9 @@ const MemberDashboard = ({ user }: { user: any }) => {
         <Button
           style={{ color: "white", fontWeight: "bold" }}
           className={`navbar-button ${
-            activeSection === "schedule" ? "active" : ""
+            activeSection === "goals" ? "active" : ""
           }`}
-          onClick={() => handleNavClick("schedule")}
+          onClick={() => handleNavClick("goals")}
         >
           Metrics and Goals
         </Button>
@@ -62,7 +63,15 @@ const MemberDashboard = ({ user }: { user: any }) => {
         </Button>
       </nav>
       {/* Content for each section */}
-      <div style={{ padding: "40px", height: "700px" }}>
+      <div
+        style={{
+          padding: "40px",
+          paddingLeft: "100px",
+          paddingRight: "100px",
+          minHeight: "700px",
+          height: "fit-content",
+        }}
+      >
         {activeSection === "dashboard" && (
           <div>
             <Dashboard user={user} />
@@ -71,6 +80,12 @@ const MemberDashboard = ({ user }: { user: any }) => {
         {activeSection === "profile" && (
           <div>
             <ProfileSettings user={user} />
+          </div>
+        )}
+
+        {activeSection === "goals" && (
+          <div>
+            <GoalsMetrics user={user} />
           </div>
         )}
         {activeSection === "schedule" && (

@@ -17,7 +17,7 @@ function ProfileSettings({ user }: { user: any }) {
     e.preventDefault();
     console.log("handling submit");
     try {
-      if (newFirstName != user.firstName) {
+      if (newFirstName !== user.firstName) {
         await axios.put(
           `http://localhost:8080/members/${user.id}/updateFirstName`,
           null,
@@ -29,7 +29,7 @@ function ProfileSettings({ user }: { user: any }) {
         );
       }
 
-      if (newLastName != user.lastName) {
+      if (newLastName !== user.lastName) {
         await axios.put(
           `http://localhost:8080/members/${user.id}/updateLastName`,
           null,
@@ -41,7 +41,7 @@ function ProfileSettings({ user }: { user: any }) {
         );
       }
 
-      if (newPhoneNumber != user.phoneNumber) {
+      if (newPhoneNumber !== user.phoneNumber) {
         await axios.put(
           `http://localhost:8080/members/${user.id}/updatePhoneNumber`,
           null,
@@ -53,7 +53,7 @@ function ProfileSettings({ user }: { user: any }) {
         );
       }
 
-      if (newEmail != user.email) {
+      if (newEmail !== user.email) {
         await axios.put(
           `http://localhost:8080/members/${user.id}/updateEmail`,
           null,
@@ -67,7 +67,7 @@ function ProfileSettings({ user }: { user: any }) {
         localStorage.setItem("email", newEmail);
       }
 
-      if (newPassword != user.pass_word) {
+      if (newPassword !== user.pass_word) {
         await axios.put(
           `http://localhost:8080/members/${user.id}/updatePassword`,
           null,
