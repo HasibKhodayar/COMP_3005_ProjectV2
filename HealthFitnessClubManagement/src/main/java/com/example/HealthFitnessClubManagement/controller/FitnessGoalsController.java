@@ -1,93 +1,48 @@
 package com.example.HealthFitnessClubManagement.controller;
+
 import com.example.HealthFitnessClubManagement.model.FitnessGoals;
-import com.example.HealthFitnessClubManagement.model.HealthMetric;
-import com.example.HealthFitnessClubManagement.model.Member;
-import com.example.HealthFitnessClubManagement.service.*;
+import com.example.HealthFitnessClubManagement.service.FitnessGoalsService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.util.List;
 
 @RestController
-@RequestMapping("/goals")
-@CrossOrigin
+@RequestMapping("/fitnessGoals")
 public class FitnessGoalsController {
+
+    private final FitnessGoalsService fitnessGoalsService;
+
     @Autowired
-    private GoalsService goalsService;
-
-//    @PostMapping("/createGoal")
-//    public ResponseEntity<String> createFitnessGoal(@RequestBody FitnessGoals request) {
-//        ResponseEntity<String> response = goalsService.createFitnessGoal(request.getMember(), request.getGoalDescription(),
-//                request.getTargetWeight(),request.getTargetBodyFat(),request.getTargetMuscleMass());
-//        return response;
-//    }
-
-    @GetMapping("/{memberId}/getGoal")
-    public ResponseEntity<FitnessGoals> getFitnessGoal(@PathVariable Long memberId) {
-        FitnessGoals goal = goalsService.findGoalByMember(memberId);
-        System.out.println("memberId" + memberId);
-        System.out.println("goal:" + goal);
-        if (goal != null) {
-            return ResponseEntity.ok(goal);
-        } else {
-            System.out.println("Goal not found.");
-            return ResponseEntity.notFound().build();
-        }
+    public FitnessGoalsController(FitnessGoalsService fitnessGoalsService) {
+        this.fitnessGoalsService = fitnessGoalsService;
     }
 
-//    @GetMapping("/{goalId}/getGoalbyId")
-//    public ResponseEntity<FitnessGoals> getFitnessGoalbyId(@PathVariable Long goalId) {
-//        FitnessGoals goal = goalsService.findGoalByMemberID(goalId);
-//        System.out.println("memberId" + goalId);
-//        System.out.println("goal:" + goal);
-//        if (goal != null) {
-//            return ResponseEntity.ok(goal);
-//        } else {
-//            System.out.println("Goal not found.");
-//            return ResponseEntity.notFound().build();
-//        }
-//    }
+    @PostMapping
+    public ResponseEntity<FitnessGoals> createFitnessGoals(@RequestBody FitnessGoals fitnessGoals) {
+        FitnessGoals createdFitnessGoals = fitnessGoalsService.saveFitnessGoals(fitnessGoals);
+        return new ResponseEntity<>(createdFitnessGoals, HttpStatus.CREATED);
+    }
 
-//    @PutMapping("/{id}/updateFGDesc")
-//    public ResponseEntity<String> updateFGDescription(@PathVariable Long id, @RequestParam String newDescription) {
-//        try {
-//            goalsService.updateFitnessGoalDescription(id, newDescription);
-//            return ResponseEntity.ok("Member's fitness goal description updated successfully");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update member's fitness goal description");
-//        }
-//    }
-//
-//    @PutMapping("/{id}/updateFGTargetWeight")
-//    public ResponseEntity<String> updateFGTargetWeight(@PathVariable Long id, @RequestParam Double newTargetWeight) {
-//        try {
-//            goalsService.updateFGTargetWeight(id, newTargetWeight);
-//            return ResponseEntity.ok("Member's target weight updated successfully");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update member's target weight");
-//        }
-//    }
-//
-//    @PutMapping("/{id}/updateFGTargetBodyFat")
-//    public ResponseEntity<String> updateFGTargetBodyFat(@PathVariable Long id, @RequestParam Double newTargetBodyFat) {
-//        try {
-//            goalsService.updateFGTargetBodyFat(id, newTargetBodyFat);
-//            return ResponseEntity.ok("Member's target body fat percentage updated successfully");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update member's target body fat percentage");
-//        }
-//    }
-//
-//    @PutMapping("/{id}/updateFGTargetMuscleMass")
-//    public ResponseEntity<String> updateFGTargetMuscleMass(@PathVariable Long id, @RequestParam Double newTargetMuscleMass) {
-//        try {
-//            goalsService.updateFGTargetMuscleMass(id, newTargetMuscleMass);
-//            return ResponseEntity.ok("Member's target muscle mass updated successfully");
-//        } catch (Exception e) {
-//            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update member's target muscle mass");
-//        }
-//    }
+    @GetMapping
+    public ResponseEntity<List<FitnessGoals>> getAllFitnessGoals() {
+        List<FitnessGoals> fitnessGoalsList = fitnessGoalsService.getAllFitnessGoals();
+        return new ResponseEntity<>(fitnessGoalsList, HttpStatus.OK);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<FitnessGoals> getFitnessGoalsById(@PathVariable("id") Integer id) {
+        FitnessGoals fitnessGoals = fitnessGoalsService.getFitnessGoalsById(id);
+        System.out.println("id passed in fitness controller" + id);
+        System.out.println("fitnessGoals" + fitnessGoals);
+        return new ResponseEntity<>(fitnessGoals, HttpStatus.OK);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteFitnessGoals(@PathVariable("id") Integer id) {
+        fitnessGoalsService.deleteFitnessGoals(id);
+        return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+    }
 }

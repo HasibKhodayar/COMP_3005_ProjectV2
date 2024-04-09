@@ -15,27 +15,27 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Modifying
     @Transactional
-    @Query("UPDATE Member m SET m.firstName = :newFirstName WHERE m.id = :member_id")
+    @Query("UPDATE Member m SET m.firstName = :newFirstName WHERE m.memberID = :member_id")
     void updateMemberFirstNameById(Long member_id, String newFirstName);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Member m SET m.lastName = :newLastName WHERE m.id = :member_id")
+    @Query("UPDATE Member m SET m.lastName = :newLastName WHERE m.memberID = :member_id")
     void updateMemberLastNameByID(Long member_id, String newLastName);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Member m SET m.email = :newEmail WHERE m.id = :member_id")
+    @Query("UPDATE Member m SET m.email = :newEmail WHERE m.memberID = :member_id")
     void updateMemberEmailById(Long member_id, String newEmail);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Member m SET m.phoneNumber = :newPhoneNumber WHERE m.id = :member_id")
+    @Query("UPDATE Member m SET m.phoneNumber = :newPhoneNumber WHERE m.memberID = :member_id")
     void updateMemberPhoneNumberById(Long member_id, String newPhoneNumber);
 
     @Modifying
     @Transactional
-    @Query("UPDATE Member m SET m.pass_word = :newPassword WHERE m.id = :member_id")
+    @Query("UPDATE Member m SET m.password = :newPassword WHERE m.memberID = :member_id")
     void updateMemberPasswordById(Long member_id, String newPassword);
 
     @Query("SELECT m FROM Member m WHERE m.firstName = :userFirstName AND m.lastName = :userLastName")

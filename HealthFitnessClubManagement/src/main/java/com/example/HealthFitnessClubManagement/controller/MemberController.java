@@ -1,7 +1,7 @@
 package com.example.HealthFitnessClubManagement.controller;
 
+;
 import com.example.HealthFitnessClubManagement.model.FitnessGoals;
-import com.example.HealthFitnessClubManagement.model.HealthMetric;
 import com.example.HealthFitnessClubManagement.model.Member;
 import com.example.HealthFitnessClubManagement.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,10 +20,16 @@ public class MemberController {
     @Autowired
     private MemberService memberService;
 
+
+    @GetMapping
+    public ResponseEntity<List<Member>> getAllMembers() {
+        List<Member> memberList = memberService.getAllMembers();
+        return new ResponseEntity<>(memberList, HttpStatus.OK);
+    }
     @PostMapping("/register")
     public ResponseEntity<String> registerUser(@RequestBody Member request) {
         ResponseEntity<String> response = memberService.userRegistration(request.getFirstName(), request.getLastName(),
-                request.getPhoneNumber(), request.getEmail(), request.getPass_word(),
+                request.getPhoneNumber(), request.getEmail(), request.getPassword(),
                 request.getMemberTypeId());
         return response;
     }

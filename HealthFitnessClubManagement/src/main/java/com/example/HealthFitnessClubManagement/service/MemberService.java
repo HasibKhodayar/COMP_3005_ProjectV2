@@ -1,10 +1,6 @@
 package com.example.HealthFitnessClubManagement.service;
 
-import com.example.HealthFitnessClubManagement.model.HealthMetric;
 import com.example.HealthFitnessClubManagement.model.Member;
-import com.example.HealthFitnessClubManagement.model.FitnessGoals;
-import com.example.HealthFitnessClubManagement.repository.FitnessGoalsRepository;
-import com.example.HealthFitnessClubManagement.repository.HealthMetricsRepository;
 import com.example.HealthFitnessClubManagement.repository.MemberRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -19,10 +15,10 @@ public class MemberService {
 
     @Autowired
     private MemberRepository memberRepository;
-    @Autowired
-    private FitnessGoalsRepository fitnessGoalsRepository;
-    @Autowired
-    private HealthMetricsRepository healthMetricsRepository;
+
+    public List<Member> getAllMembers() {
+        return memberRepository.findAll();
+    }
 
     public ResponseEntity<String> userRegistration(String firstName, String lastName, String phone, String email, String password, int memberType) {
         try {
@@ -33,7 +29,7 @@ public class MemberService {
             member.setFirstName(firstName);
             member.setLastName(lastName);
             member.setEmail(email);
-            member.setPass_word(password);
+            member.setPassword(password);
             member.setPhoneNumber(phone);
             member.setMemberTypeId(memberType);
 
