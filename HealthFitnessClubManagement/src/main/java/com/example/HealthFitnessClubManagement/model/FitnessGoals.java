@@ -5,6 +5,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.math.BigDecimal;
+import java.sql.Date;
 import java.time.LocalDate;
 
 @Entity
@@ -22,7 +23,7 @@ public class FitnessGoals {
     private String goalDescription;
 
     @Column(name = "goal_date")
-    private LocalDate goalDate;
+    private Date goalDate;
 
     @Column(name = "target_weight")
     private BigDecimal targetWeight;

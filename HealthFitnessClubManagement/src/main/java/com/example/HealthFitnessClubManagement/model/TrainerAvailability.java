@@ -15,7 +15,7 @@ public class TrainerAvailability {
     @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "availabilityID")
-    private Long id;
+    private Long availabilityID;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @Getter

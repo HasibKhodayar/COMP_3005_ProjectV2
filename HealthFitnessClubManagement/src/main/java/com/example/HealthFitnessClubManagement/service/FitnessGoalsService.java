@@ -4,6 +4,9 @@ import com.example.HealthFitnessClubManagement.model.FitnessGoals;
 import com.example.HealthFitnessClubManagement.repository.FitnessGoalsRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.sql.Date;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @Service
@@ -35,5 +38,15 @@ public class FitnessGoalsService {
     // Method to delete FitnessGoals by ID
     public void deleteFitnessGoals(Integer id) {
         fitnessGoalsRepository.deleteById(id);
+    }
+
+    public void updateGoalDetails(Long goalId, String date, String newDescription, double newTargetWeight, double newTargetBodyFat, double newTargetMuscleMass){
+        try {
+            fitnessGoalsRepository.updateFitnessGoalDate(goalId, new Date(((new SimpleDateFormat("yyyy-MM-dd")).parse(date)).getTime()));
+            fitnessGoalsRepository.updateFitnessGoalDescription(goalId, newDescription);
+            fitnessGoalsRepository.updateTargetWeight(goalId, newTargetWeight);
+            fitnessGoalsRepository.updateTargetBodyFat(goalId, newTargetBodyFat);
+            fitnessGoalsRepository.updateTargetMuscleMass(goalId, newTargetMuscleMass);
+        }catch (Exception e){e.printStackTrace(); System.out.println("Failed to update Fitness Goal");}
     }
 }
