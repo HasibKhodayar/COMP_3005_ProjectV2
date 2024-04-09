@@ -1,33 +1,87 @@
 import CloseIcon from "@mui/icons-material/Close";
-import { IconButton, Snackbar, TextField } from "@mui/material";
+import {
+  Avatar,
+  Button,
+  IconButton,
+  List,
+  ListItem,
+  ListItemAvatar,
+  ListItemText,
+  Snackbar,
+  TextField,
+  ThemeProvider,
+  createTheme,
+} from "@mui/material";
+import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 
 import DecimalInput from "../../../components/DecimalInput";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import axios from "axios";
+import FitnessCenterIcon from "@mui/icons-material/FitnessCenter";
+import ScaleIcon from "@mui/icons-material/Scale";
+import AccessibilityIcon from "@mui/icons-material/Accessibility";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
+import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
+import dayjs from "dayjs";
 
 function GoalsMetrics({ user }: { user: any }) {
+  const [userGoal, setUserGoal] = useState<any>("");
+  const [userMetrics, setUserMetrics] = useState<any>(null);
   const [goalDescription, setGoalDescription] = useState("");
   const [targetWeight, setTargetWeight] = useState("");
   const [targetBodyFat, setTargetBodyFat] = useState("");
   const [targetMuscleMass, setTargetMuscleMass] = useState("");
   const [openResult, setOpenResult] = useState(false);
   const [resultMessage, setResultMessage] = useState("");
+  const [goalDate, setGoalDate] = useState("");
+
+  const getGoals = async () => {
+    try {
+      const fitnessGoal = await axios.get(
+        `http://localhost:8080/goals/${user.id}/getGoal`
+      );
+      console.log("fitnessGoal", fitnessGoal);
+      setUserGoal(fitnessGoal);
+    } catch (error) {
+      console.log("Error retrieving fitness goals:", error);
+    }
+  };
+
+  const getMetrics = async () => {
+    try {
+      const metrics = await axios.get(
+        `http://localhost:8080/members/${user.id}/getMetrics`
+      );
+      console.log("metrics", metrics);
+      setUserMetrics(metrics);
+    } catch (error) {
+      console.log("Error retrieving user metrics:", error);
+    }
+  };
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
     console.log("handling submit");
     try {
-      //   if (newFirstName != user.firstName) {
-      //     await axios.put(
-      //       `http://localhost:8080/members/${user.id}/updateFirstName`,
-      //       null,
-      //       {
-      //         params: {
-      //           newFirstName,
-      //         },
-      //       }
-      //     );
-      //   }
-
+      if (!userGoal) {
+        await axios.post(`http://localhost:8080/goals/${user.id}/createGoal`, {
+          member: user,
+          goal_description: goalDescription,
+          goal_date: goalDate,
+          target_weight: targetWeight,
+          target_body_fat: targetBodyFat,
+          target_muscle_mass: targetMuscleMass,
+        });
+      } else {
+        await axios.put(`http://localhost:8080/goals/${user.id}/updateGoal`, {
+          member: user,
+          goal_description: goalDescription,
+          goal_date: goalDate,
+          target_weight: targetWeight,
+          target_body_fat: targetBodyFat,
+          target_muscle_mass: targetMuscleMass,
+        });
+      }
       setResultMessage("Successfully updated profile configurations.");
       setOpenResult(true);
     } catch (error) {
@@ -50,6 +104,11 @@ function GoalsMetrics({ user }: { user: any }) {
 
     setOpenResult(false);
   };
+
+  useEffect(() => {
+    getGoals();
+    getMetrics();
+  }, []);
 
   const action = (
     <React.Fragment>
@@ -92,94 +151,185 @@ function GoalsMetrics({ user }: { user: any }) {
             <div style={{ paddingBottom: "20px" }}>
               View and modify your set fitness goals here.
             </div>
-            <div
-              style={{
-                paddingBottom: "20px",
-                maxWidth: "400px",
-                fontStyle: "italic",
-              }}
-            >
-              It doesn't seem you have any fitness goals set yet. Set your goals
-              by clicking the button below.
-            </div>
-            <div
-              style={{ display: "flex", flexDirection: "column", gap: "10px" }}
-            >
-              <div>
-                <div style={{ fontSize: "18px", paddingBottom: "8px" }}>
-                  Describe your goal:
-                </div>
-                <TextField
-                  id="outlined-multiline-flexible"
-                  multiline
-                  sx={{ width: "400px" }}
-                  maxRows={4}
-                  value={goalDescription}
-                  onChange={(e) => setGoalDescription(e.target.value)}
-                />
-              </div>
-
-              <div>
-                <div style={{ fontSize: "18px", paddingBottom: "8px" }}>
-                  Add your targeted weight:
-                </div>
-                <DecimalInput
-                  value={targetWeight}
-                  onChange={setTargetWeight}
-                  unit={"lbs."}
-                />
-              </div>
-              <div>
-                <div style={{ fontSize: "18px", paddingBottom: "8px" }}>
-                  Add your targeted body fat percentage:
-                </div>
-                <DecimalInput
-                  value={targetBodyFat}
-                  onChange={setTargetBodyFat}
-                  unit={"%"}
-                />
-              </div>
-              <div>
-                <div style={{ fontSize: "18px", paddingBottom: "8px" }}>
-                  Add your targeted muscle mass percentage:
-                </div>
-                <DecimalInput
-                  value={targetMuscleMass}
-                  onChange={setTargetMuscleMass}
-                  unit={"%"}
-                />
-              </div>
-
-              <button
-                type="submit"
-                style={{
-                  marginBottom: "20px",
-                  backgroundColor: "#F9A826",
-                  color: "white",
-                  border: "none",
-                  padding: "10px 20px",
-                  cursor: "pointer",
-                  borderRadius: "15px",
-                  fontSize: "15px",
-                  fontWeight: "bold",
-                  width: "100px",
-                }}
-              >
-                Save
-              </button>
-              <div style={{ display: "flex", justifyItems: "center" }}>
-                <Snackbar
-                  open={openResult}
-                  autoHideDuration={3000}
-                  onClose={handleClose}
-                  message={resultMessage}
-                  action={action}
-                  sx={{
-                    justifyContent: "center",
+            {userGoal ? (
+              <>
+                <>
+                  <List
+                    sx={{
+                      width: "100%",
+                      maxWidth: 360,
+                      bgcolor: "background.paper",
+                    }}
+                  >
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar sx={{ bgcolor: "#f9a826" }}>
+                          <ScaleIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={userGoal.targetWeight}
+                        secondary="Target Weight"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar sx={{ bgcolor: "#f9a826" }}>
+                          <AccessibilityIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={userGoal.targetBodyFat}
+                        secondary="Target Body Fat %"
+                      />
+                    </ListItem>
+                    <ListItem>
+                      <ListItemAvatar>
+                        <Avatar sx={{ bgcolor: "#f9a826" }}>
+                          <FitnessCenterIcon />
+                        </Avatar>
+                      </ListItemAvatar>
+                      <ListItemText
+                        primary={userGoal.targetMuscleMass}
+                        secondary="Target Muscle Mass %"
+                      />
+                    </ListItem>
+                  </List>
+                  <button
+                    type="button"
+                    style={{
+                      marginTop: "20px",
+                      marginLeft: "20px",
+                      backgroundColor: "#F9A826",
+                      color: "white",
+                      border: "none",
+                      padding: "10px 20px",
+                      cursor: "pointer",
+                      borderRadius: "15px",
+                      fontSize: "15px",
+                      fontWeight: "bold",
+                      width: "100px",
+                    }}
+                    onClick={() => {
+                      setUserGoal(null);
+                    }}
+                  >
+                    EDIT
+                  </button>
+                </>
+              </>
+            ) : (
+              <>
+                <div
+                  style={{
+                    paddingBottom: "20px",
+                    maxWidth: "400px",
+                    fontStyle: "italic",
                   }}
-                />
-              </div>
-            </div>
+                >
+                  It doesn't seem you have any fitness goals set yet. Set your
+                  goals by clicking the button below.
+                </div>
+                <div
+                  style={{
+                    display: "flex",
+                    flexDirection: "column",
+                    gap: "10px",
+                  }}
+                >
+                  <div>
+                    <div style={{ fontSize: "18px", paddingBottom: "8px" }}>
+                      Describe your goal:
+                    </div>
+                    <TextField
+                      id="outlined-multiline-flexible"
+                      multiline
+                      sx={{ width: "400px" }}
+                      maxRows={4}
+                      value={goalDescription}
+                      onChange={(e) =>
+                        setGoalDescription((prev) => e.target.value)
+                      }
+                    />
+                  </div>
+
+                  <div>
+                    <div style={{ fontSize: "18px", paddingBottom: "8px" }}>
+                      Add your targeted weight:
+                    </div>
+                    <DecimalInput
+                      value={targetWeight}
+                      onChange={setTargetWeight}
+                      unit={"lbs."}
+                      sx={{ width: "100px" }}
+                    />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "18px", paddingBottom: "8px" }}>
+                      Add your targeted body fat percentage:
+                    </div>
+                    <DecimalInput
+                      value={targetBodyFat}
+                      onChange={setTargetBodyFat}
+                      unit={"%"}
+                      sx={{ width: "100px" }}
+                    />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: "18px", paddingBottom: "8px" }}>
+                      Add your targeted muscle mass percentage:
+                    </div>
+                    <DecimalInput
+                      value={targetMuscleMass}
+                      onChange={setTargetMuscleMass}
+                      unit={"%"}
+                      sx={{ width: "100px" }}
+                    />
+                    <div style={{ fontSize: "18px", paddingBottom: "8px" }}>
+                      What date would you like to achieve this goal by?
+                    </div>
+                    <LocalizationProvider dateAdapter={AdapterDayjs}>
+                      <DatePicker
+                        label="MM/DD/YYYY"
+                        onChange={(date) =>
+                          setGoalDate(dayjs(date).format("YYYY-MM-DD"))
+                        }
+                      />
+                    </LocalizationProvider>
+                  </div>
+
+                  <button
+                    type="submit"
+                    style={{
+                      marginBottom: "20px",
+                      backgroundColor: "#F9A826",
+                      color: "white",
+                      border: "none",
+                      padding: "10px 20px",
+                      cursor: "pointer",
+                      borderRadius: "15px",
+                      fontSize: "15px",
+                      fontWeight: "bold",
+                      width: "100px",
+                    }}
+                  >
+                    Save
+                  </button>
+                  <div style={{ display: "flex", justifyItems: "center" }}>
+                    <Snackbar
+                      open={openResult}
+                      autoHideDuration={3000}
+                      onClose={handleClose}
+                      message={resultMessage}
+                      action={action}
+                      sx={{
+                        justifyContent: "center",
+                      }}
+                    />
+                  </div>
+                </div>
+              </>
+            )}
           </form>
         </div>
       </div>

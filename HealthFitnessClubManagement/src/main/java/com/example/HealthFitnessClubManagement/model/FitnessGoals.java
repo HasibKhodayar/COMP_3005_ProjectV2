@@ -1,6 +1,7 @@
 package com.example.HealthFitnessClubManagement.model;
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
 
@@ -9,47 +10,75 @@ import java.util.Date;
 public class FitnessGoals {
 
     @Id
-    @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "goalID")
-    private Long id;
+    private Long goalID;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @Getter
-    @JoinColumn(name = "memberID")
+    @Setter
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "memberID")  // This is the foreign key column in the FitnessGoals table
     private Member member;
 
-    @Getter
     @Column(name = "goal_description")
     private String goalDescription;
 
-    @Getter
+    @Column(name = "goal_date")
+    private Date goalDate;
+
     @Column(name = "target_weight")
     private Double targetWeight;
 
-    @Getter
     @Column(name = "target_body_fat")
     private Double targetBodyFat;
 
-    @Getter
     @Column(name = "target_muscle_mass")
     private Double targetMuscleMass;
 
+    // Getters and Setters
+    public Long getGoalID() {
+        return goalID;
+    }
 
-    public void setMember(Member member) {
-        this.member = member;
+    public void setGoalID(Long goalID) {
+        this.goalID = goalID;
+    }
+
+
+    public String getGoalDescription() {
+        return goalDescription;
     }
 
     public void setGoalDescription(String goalDescription) {
         this.goalDescription = goalDescription;
     }
 
+    public Date getGoalDate() {
+        return goalDate;
+    }
+
+    public void setGoalDate(Date goalDate) {
+        this.goalDate = goalDate;
+    }
+
+    public Double getTargetWeight() {
+        return targetWeight;
+    }
+
     public void setTargetWeight(Double targetWeight) {
         this.targetWeight = targetWeight;
     }
 
+    public Double getTargetBodyFat() {
+        return targetBodyFat;
+    }
+
     public void setTargetBodyFat(Double targetBodyFat) {
         this.targetBodyFat = targetBodyFat;
+    }
+
+    public Double getTargetMuscleMass() {
+        return targetMuscleMass;
     }
 
     public void setTargetMuscleMass(Double targetMuscleMass) {

@@ -15,7 +15,6 @@ function ProfileSettings({ user }: { user: any }) {
 
   const handleSubmit = async (e: any) => {
     e.preventDefault();
-    console.log("handling submit");
     try {
       if (newFirstName !== user.firstName) {
         await axios.put(
@@ -116,7 +115,17 @@ function ProfileSettings({ user }: { user: any }) {
   );
 
   return (
-    <div>
+    <div
+      style={{
+        display: "flex",
+        flexDirection: "column",
+        justifyContent: "space-between",
+        border: "3px solid #f9a826",
+        borderRadius: "20px",
+        padding: "20px",
+        paddingLeft: "50px",
+      }}
+    >
       <h1>Profile settings</h1>
 
       <div>

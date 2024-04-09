@@ -13,27 +13,32 @@ import java.util.List;
 @Repository
 public interface FitnessGoalsRepository extends JpaRepository<FitnessGoals, Long>{
 
-    @Query("SELECT f FROM FitnessGoals f WHERE f.member = :memberId")
-    FitnessGoals findFitnessGoalByMember(Member memberId);
+    @Query("SELECT f FROM FitnessGoals f WHERE f.member.id = :memberId")
+    FitnessGoals findFitnessGoalByMember(Long memberId);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE FitnessGoals f SET f.goalDescription = :newDescription WHERE f.id = :goalId")
-    void updateFitnessGoalDescription(Long goalId, String newDescription);
+//    @Query("SELECT f FROM FitnessGoals f WHERE f.id = :id")
+//    FitnessGoals findFitnessGoalByGoal(Long id);
+    //FitnessGoals
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE FitnessGoals f SET f.targetWeight = :newTargetWeight WHERE f.id = :goalId")
-    void updateTargetWeight(Long goalId, Double newTargetWeight);
+    // till u fix it
+//    @Modifying
+//    @Transactional
+//    @Query("UPDATE FitnessGoals f SET f.goalDescription = :newDescription WHERE f.id = :goalId")
+//    void updateFitnessGoalDescription(Long goalId, String newDescription);
 
-    @Modifying
-    @Transactional
-    @Query("UPDATE FitnessGoals f SET f.targetBodyFat = :newTargetBodyFat WHERE f.id = :goalId")
-    void updateTargetBodyFat(Long goalId, Double newTargetBodyFat);
-
-    @Modifying
-    @Transactional
-    @Query("UPDATE FitnessGoals f SET f.targetMuscleMass = :newTargetMuscleMass WHERE f.id = :goalId")
-    void updateTargetMuscleMass(Long goalId, Double newTargetMuscleMass);
+//    @Modifying
+//    @Transactional
+//    @Query("UPDATE FitnessGoals f SET f.targetWeight = :newTargetWeight WHERE f.id = :goalId")
+//    void updateTargetWeight(Long goalId, Double newTargetWeight);
+//
+//    @Modifying
+//    @Transactional
+//    @Query("UPDATE FitnessGoals f SET f.targetBodyFat = :newTargetBodyFat WHERE f.id = :goalId")
+//    void updateTargetBodyFat(Long goalId, Double newTargetBodyFat);
+//
+//    @Modifying
+//    @Transactional
+//    @Query("UPDATE FitnessGoals f SET f.targetMuscleMass = :newTargetMuscleMass WHERE f.id = :goalId")
+//    void updateTargetMuscleMass(Long goalId, Double newTargetMuscleMass);
 
 }

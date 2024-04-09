@@ -6,10 +6,12 @@ const DecimalInput = ({
   value,
   onChange,
   unit,
+  sx,
 }: {
   value: any;
   onChange: any;
   unit: any;
+  sx: any;
 }) => {
   const handleInputChange = (event: any) => {
     const inputValue = event.target.value;
@@ -22,6 +24,7 @@ const DecimalInput = ({
   return (
     <TextField
       type="text"
+      required
       value={value}
       onChange={handleInputChange}
       inputProps={{
@@ -33,7 +36,7 @@ const DecimalInput = ({
           <InputAdornment position="end">{unit}</InputAdornment>
         ),
       }}
-      sx={{ width: "400px" }}
+      sx={sx}
     />
   );
 };

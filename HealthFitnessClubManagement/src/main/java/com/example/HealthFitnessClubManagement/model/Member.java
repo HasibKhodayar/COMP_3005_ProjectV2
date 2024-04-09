@@ -2,8 +2,10 @@ package com.example.HealthFitnessClubManagement.model;
 
 import jakarta.persistence.*;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "Members")
@@ -11,8 +13,12 @@ public class Member {
     @Id
     @Getter
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Setter
     @Column(name = "memberID")
     private Long id;
+
+    @OneToOne(mappedBy = "member", cascade = CascadeType.ALL)
+    private FitnessGoals fitnessGoal;
 
     @Getter
     @Column(name = "first_name", nullable = false)
@@ -52,5 +58,6 @@ public class Member {
     public void setMemberTypeId(Integer memberTypeId) {
         this.memberTypeId = memberTypeId;
     }
+
 }
 
