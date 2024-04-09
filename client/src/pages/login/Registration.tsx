@@ -23,7 +23,7 @@ const Registration = () => {
           firstName,
           lastName,
           email,
-          pass_word: password,
+          password,
           phoneNumber: phone,
           memberTypeId: parseInt(memberType),
         }

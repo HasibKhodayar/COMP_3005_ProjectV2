@@ -9,7 +9,7 @@ function ProfileSettings({ user }: { user: any }) {
   const [newLastName, setNewLastName] = useState(user.lastName);
   const [newPhoneNumber, setNewPhoneNumber] = useState(user.phoneNumber);
   const [newEmail, setNewEmail] = useState(user.email);
-  const [newPassword, setNewPassword] = useState(user.pass_word);
+  const [newPassword, setNewPassword] = useState(user.password);
   const [openResult, setOpenResult] = useState(false);
   const [resultMessage, setResultMessage] = useState("");
 
@@ -18,7 +18,7 @@ function ProfileSettings({ user }: { user: any }) {
     try {
       if (newFirstName !== user.firstName) {
         await axios.put(
-          `http://localhost:8080/members/${user.id}/updateFirstName`,
+          `http://localhost:8080/members/${user.memberID}/updateFirstName`,
           null,
           {
             params: {
@@ -30,7 +30,7 @@ function ProfileSettings({ user }: { user: any }) {
 
       if (newLastName !== user.lastName) {
         await axios.put(
-          `http://localhost:8080/members/${user.id}/updateLastName`,
+          `http://localhost:8080/members/${user.memberID}/updateLastName`,
           null,
           {
             params: {
@@ -42,7 +42,7 @@ function ProfileSettings({ user }: { user: any }) {
 
       if (newPhoneNumber !== user.phoneNumber) {
         await axios.put(
-          `http://localhost:8080/members/${user.id}/updatePhoneNumber`,
+          `http://localhost:8080/members/${user.memberID}/updatePhoneNumber`,
           null,
           {
             params: {
@@ -54,7 +54,7 @@ function ProfileSettings({ user }: { user: any }) {
 
       if (newEmail !== user.email) {
         await axios.put(
-          `http://localhost:8080/members/${user.id}/updateEmail`,
+          `http://localhost:8080/members/${user.memberID}/updateEmail`,
           null,
           {
             params: {
@@ -66,9 +66,9 @@ function ProfileSettings({ user }: { user: any }) {
         localStorage.setItem("email", newEmail);
       }
 
-      if (newPassword !== user.pass_word) {
+      if (newPassword !== user.password) {
         await axios.put(
-          `http://localhost:8080/members/${user.id}/updatePassword`,
+          `http://localhost:8080/members/${user.memberID}/updatePassword`,
           null,
           {
             params: {

@@ -26,6 +26,7 @@ import dayjs from "dayjs";
 
 function GoalsMetrics({ user }: { user: any }) {
   const [userGoal, setUserGoal] = useState<any>("");
+  const [savedUserGoal, setSavedUserGoal] = useState<any>("");
   const [userMetrics, setUserMetrics] = useState<any>(null);
   const [goalDescription, setGoalDescription] = useState("");
   const [targetWeight, setTargetWeight] = useState("");
@@ -38,10 +39,10 @@ function GoalsMetrics({ user }: { user: any }) {
   const getGoals = async () => {
     try {
       const fitnessGoal = await axios.get(
-        `http://localhost:8080/goals/${user.id}/getGoal`
+        `http://localhost:8080/fitnessGoals/${user.memberID}`
       );
       console.log("fitnessGoal", fitnessGoal);
-      setUserGoal(fitnessGoal);
+      setUserGoal(fitnessGoal.data);
     } catch (error) {
       console.log("Error retrieving fitness goals:", error);
     }
@@ -64,23 +65,29 @@ function GoalsMetrics({ user }: { user: any }) {
     console.log("handling submit");
     try {
       if (!userGoal) {
-        await axios.post(`http://localhost:8080/goals/${user.id}/createGoal`, {
-          member: user,
-          goal_description: goalDescription,
-          goal_date: goalDate,
-          target_weight: targetWeight,
-          target_body_fat: targetBodyFat,
-          target_muscle_mass: targetMuscleMass,
-        });
+        await axios.post(
+          `http://localhost:8080/fitnessGoals/${user.memberID}/createGoal`,
+          {
+            member: user,
+            goalDescription,
+            goalDate,
+            targetWeight,
+            targetBodyFat,
+            targetMuscleMass,
+          }
+        );
       } else {
-        await axios.put(`http://localhost:8080/goals/${user.id}/updateGoal`, {
-          member: user,
-          goal_description: goalDescription,
-          goal_date: goalDate,
-          target_weight: targetWeight,
-          target_body_fat: targetBodyFat,
-          target_muscle_mass: targetMuscleMass,
-        });
+        await axios.put(
+          `http://localhost:8080/goals/${user.memberID}/updateGoal`,
+          {
+            member: user,
+            goalDescription,
+            goalDate,
+            targetWeight,
+            targetBodyFat,
+            targetMuscleMass,
+          }
+        );
       }
       setResultMessage("Successfully updated profile configurations.");
       setOpenResult(true);
@@ -106,8 +113,12 @@ function GoalsMetrics({ user }: { user: any }) {
   };
 
   useEffect(() => {
-    getGoals();
-    getMetrics();
+    const fetchData = async () => {
+      await getGoals();
+      await getMetrics();
+    };
+
+    fetchData();
   }, []);
 
   const action = (
@@ -162,13 +173,17 @@ function GoalsMetrics({ user }: { user: any }) {
                     }}
                   >
                     <ListItem>
+                      <b>Your goal</b>
+                      {` : ${userGoal.goalDescription}`}
+                    </ListItem>
+                    <ListItem>
                       <ListItemAvatar>
                         <Avatar sx={{ bgcolor: "#f9a826" }}>
                           <ScaleIcon />
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
-                        primary={userGoal.targetWeight}
+                        primary={`${userGoal.targetWeight} lbs.`}
                         secondary="Target Weight"
                       />
                     </ListItem>
@@ -179,7 +194,7 @@ function GoalsMetrics({ user }: { user: any }) {
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
-                        primary={userGoal.targetBodyFat}
+                        primary={`${userGoal.targetBodyFat} %`}
                         secondary="Target Body Fat %"
                       />
                     </ListItem>
@@ -190,11 +205,12 @@ function GoalsMetrics({ user }: { user: any }) {
                         </Avatar>
                       </ListItemAvatar>
                       <ListItemText
-                        primary={userGoal.targetMuscleMass}
+                        primary={`${userGoal.targetMuscleMass} %`}
                         secondary="Target Muscle Mass %"
                       />
                     </ListItem>
                   </List>
+
                   <button
                     type="button"
                     style={{
@@ -211,6 +227,7 @@ function GoalsMetrics({ user }: { user: any }) {
                       width: "100px",
                     }}
                     onClick={() => {
+                      setSavedUserGoal(userGoal);
                       setUserGoal(null);
                     }}
                   >
@@ -297,24 +314,51 @@ function GoalsMetrics({ user }: { user: any }) {
                       />
                     </LocalizationProvider>
                   </div>
-
-                  <button
-                    type="submit"
+                  <div
                     style={{
-                      marginBottom: "20px",
-                      backgroundColor: "#F9A826",
-                      color: "white",
-                      border: "none",
-                      padding: "10px 20px",
-                      cursor: "pointer",
-                      borderRadius: "15px",
-                      fontSize: "15px",
-                      fontWeight: "bold",
-                      width: "100px",
+                      display: "flex",
+                      flexDirection: "row",
+                      gap: "10px",
                     }}
                   >
-                    Save
-                  </button>
+                    <button
+                      type="button"
+                      style={{
+                        marginTop: "20px",
+                        backgroundColor: "#F9A826",
+                        color: "white",
+                        border: "none",
+                        padding: "10px 20px",
+                        cursor: "pointer",
+                        borderRadius: "15px",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                        width: "100px",
+                      }}
+                      onClick={() => {
+                        setUserGoal(savedUserGoal);
+                      }}
+                    >
+                      CANCEL
+                    </button>
+                    <button
+                      type="submit"
+                      style={{
+                        marginTop: "20px",
+                        backgroundColor: "#F9A826",
+                        color: "white",
+                        border: "none",
+                        padding: "10px 20px",
+                        cursor: "pointer",
+                        borderRadius: "15px",
+                        fontSize: "15px",
+                        fontWeight: "bold",
+                        width: "100px",
+                      }}
+                    >
+                      SAVE
+                    </button>
+                  </div>
                   <div style={{ display: "flex", justifyItems: "center" }}>
                     <Snackbar
                       open={openResult}

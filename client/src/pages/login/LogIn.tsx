@@ -14,7 +14,7 @@ const LogIn = () => {
       const response = await axios.get(
         `http://localhost:8080/members/${username}`
       );
-      if (response.data.pass_word !== password) {
+      if (response.data.password !== password) {
         throw new Error("Wrong username or password");
       }
       setErrorMessage("");
