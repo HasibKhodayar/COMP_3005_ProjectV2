@@ -22,23 +22,22 @@ public class MetricsService {
         this.metricsRepository = metricsRepositoryRepository;
     }
 
-    // Method to save FitnessGoals
+
     public HealthMetric saveHealthMetric(HealthMetric metric) {
         return metricsRepository.save(metric);
     }
 
-    public HealthMetric getHealthMetricById(Long id) {
-        return metricsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("FitnessGoals with ID " + id + " not found"));
-    }
-
-    // Method to get all FitnessGoals
-    public List<HealthMetric> getAllHealthMetrics() {
-        return metricsRepository.findAll();
+    public HealthMetric getMostRecentMetricByMember(Long memberId) {
+        return metricsRepository.findMostRecentMetric(memberId);
     }
 
 
-    // Method to delete FitnessGoals by ID
+    public List<HealthMetric> getAllHealthMetrics(Long memberId) {
+        return metricsRepository.findAllMetrics(memberId);
+    }
+
+
+
     public void deleteHealthMetric(Long id) {
         metricsRepository.deleteById(id);
     }

@@ -41,6 +41,9 @@ public interface HealthMetricsRepository extends JpaRepository<HealthMetric, Lon
     @Query("UPDATE HealthMetric m SET m.muscleMass = :newMuscleMass WHERE m.id = :metricID")
     void updateMuscleMass(Long metricID, Double newMuscleMass);
 
-    @Query("SELECT m FROM HealthMetric m WHERE m.member = :memberID ORDER BY m.metricDate DESC LIMIT 1")
+    @Query("SELECT m FROM HealthMetric m WHERE m.member.memberID = :memberID ORDER BY m.metricDate DESC LIMIT 1")
     HealthMetric findMostRecentMetric(Long memberID);
+
+    @Query("SELECT m FROM HealthMetric m WHERE m.member.memberID = :memberID")
+    List<HealthMetric> findAllMetrics(Long memberID);
 }

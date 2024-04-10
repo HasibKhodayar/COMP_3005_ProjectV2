@@ -25,20 +25,20 @@ public class MetricsController {
     }
 
     @PostMapping
-    public ResponseEntity<HealthMetric> createFitnessGoals(@RequestBody HealthMetric metric) {
+    public ResponseEntity<HealthMetric> createHealthMetric(@RequestBody HealthMetric metric) {
         HealthMetric createdHealthMetric = metricsService.saveHealthMetric(metric);
         return new ResponseEntity<>(createdHealthMetric, HttpStatus.CREATED);
     }
 
-    @GetMapping
-    public ResponseEntity<List<HealthMetric>> getAllMetrics() {
-        List<HealthMetric> metricList = metricsService.getAllHealthMetrics();
+    @GetMapping("/{id}/getAllMetrics")
+    public ResponseEntity<List<HealthMetric>> getAllMetricsByMemberId(@PathVariable("id") Long memberId) {
+        List<HealthMetric> metricList = metricsService.getAllHealthMetrics(memberId);
         return new ResponseEntity<>(metricList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<HealthMetric> getHealthMetricById(@PathVariable("id") Long id) {
-        HealthMetric healthMetric = metricsService.getHealthMetricById(id);
+    public ResponseEntity<HealthMetric> getHealthMetricByMemberId(@PathVariable("id") Long id) {
+        HealthMetric healthMetric = metricsService.getMostRecentMetricByMember(id);
         return new ResponseEntity<>(healthMetric, HttpStatus.OK);
     }
 
