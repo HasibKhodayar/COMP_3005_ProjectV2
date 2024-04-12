@@ -32,11 +32,9 @@ public class FitnessGoalsController {
         return new ResponseEntity<>(fitnessGoalsList, HttpStatus.OK);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<FitnessGoals> getFitnessGoalsById(@PathVariable("id") Integer id) {
-        FitnessGoals fitnessGoals = fitnessGoalsService.getFitnessGoalsById(id);
-        System.out.println("id passed in fitness controller" + id);
-        System.out.println("fitnessGoals" + fitnessGoals);
+    @GetMapping("/{memberId}")
+    public ResponseEntity<FitnessGoals> getFitnessGoalsById(@PathVariable Long memberId) {
+        FitnessGoals fitnessGoals = fitnessGoalsService.getFitnessGoalsById(memberId);
         return new ResponseEntity<>(fitnessGoals, HttpStatus.OK);
     }
 

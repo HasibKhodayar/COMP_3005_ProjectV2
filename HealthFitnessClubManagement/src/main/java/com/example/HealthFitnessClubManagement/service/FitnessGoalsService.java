@@ -31,9 +31,8 @@ public class FitnessGoalsService {
     }
 
     // Method to get FitnessGoals by ID
-    public FitnessGoals getFitnessGoalsById(Integer id) {
-        return fitnessGoalsRepository.findById(id)
-                .orElseThrow(() -> new IllegalArgumentException("FitnessGoals with ID " + id + " not found"));
+    public FitnessGoals getFitnessGoalsById(Long memberId) {
+        return fitnessGoalsRepository.getByMemberId(memberId);
     }
 
     // Method to delete FitnessGoals by ID

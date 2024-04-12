@@ -39,4 +39,7 @@ public interface FitnessGoalsRepository extends JpaRepository<FitnessGoals, Inte
     @Query("UPDATE FitnessGoals f SET f.targetMuscleMass = :newTargetMuscleMass WHERE f.goalID = :goalId")
     void updateTargetMuscleMass(Long goalId, BigDecimal newTargetMuscleMass);
 
+    @Query("SELECT g FROM FitnessGoals g WHERE g.member.memberID = :memberId")
+    FitnessGoals getByMemberId(Long memberId);
+
 }
