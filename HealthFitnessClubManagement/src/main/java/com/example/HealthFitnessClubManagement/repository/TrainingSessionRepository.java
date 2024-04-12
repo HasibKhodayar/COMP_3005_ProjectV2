@@ -12,9 +12,6 @@ import java.util.List;
 @Repository
 public interface TrainingSessionRepository extends JpaRepository<PersonalTrainingSession, Long>{
 
-    @Modifying
-    @Query("Update TrainerAvailability SET timeSlot1 = :available WHERE availabilityID = :availabilityId")
-    int updateTimeSlot1(Long availabilityId, boolean available);
 
     @Query("SELECT s FROM PersonalTrainingSession s WHERE s.sessionId = :sessionId")
     PersonalTrainingSession getSessionById(Long sessionId);

@@ -5,6 +5,7 @@ import com.example.HealthFitnessClubManagement.repository.FitnessGoalsRepository
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.List;
@@ -40,9 +41,9 @@ public class FitnessGoalsService {
         fitnessGoalsRepository.deleteById(id);
     }
 
-    public void updateGoalDetails(Long goalId, String date, String newDescription, double newTargetWeight, double newTargetBodyFat, double newTargetMuscleMass){
+    public void updateGoalDetails(Long goalId, Date date, String newDescription, BigDecimal newTargetWeight, BigDecimal newTargetBodyFat, BigDecimal newTargetMuscleMass){
         try {
-            fitnessGoalsRepository.updateFitnessGoalDate(goalId, new Date(((new SimpleDateFormat("yyyy-MM-dd")).parse(date)).getTime()));
+            fitnessGoalsRepository.updateFitnessGoalDate(goalId, date);
             fitnessGoalsRepository.updateFitnessGoalDescription(goalId, newDescription);
             fitnessGoalsRepository.updateTargetWeight(goalId, newTargetWeight);
             fitnessGoalsRepository.updateTargetBodyFat(goalId, newTargetBodyFat);

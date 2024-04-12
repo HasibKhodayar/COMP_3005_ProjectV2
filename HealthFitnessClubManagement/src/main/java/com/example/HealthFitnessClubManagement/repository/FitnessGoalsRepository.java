@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.math.BigDecimal;
 import java.sql.Date;
 
 @Repository
@@ -26,16 +27,16 @@ public interface FitnessGoalsRepository extends JpaRepository<FitnessGoals, Inte
     @Modifying
     @Transactional
     @Query("UPDATE FitnessGoals f SET f.targetWeight = :newTargetWeight WHERE f.goalID = :goalId")
-    void updateTargetWeight(Long goalId, Double newTargetWeight);
+    void updateTargetWeight(Long goalId, BigDecimal newTargetWeight);
 
     @Modifying
     @Transactional
     @Query("UPDATE FitnessGoals f SET f.targetBodyFat = :newTargetBodyFat WHERE f.goalID = :goalId")
-    void updateTargetBodyFat(Long goalId, Double newTargetBodyFat);
+    void updateTargetBodyFat(Long goalId, BigDecimal newTargetBodyFat);
 
     @Modifying
     @Transactional
     @Query("UPDATE FitnessGoals f SET f.targetMuscleMass = :newTargetMuscleMass WHERE f.goalID = :goalId")
-    void updateTargetMuscleMass(Long goalId, Double newTargetMuscleMass);
+    void updateTargetMuscleMass(Long goalId, BigDecimal newTargetMuscleMass);
 
 }

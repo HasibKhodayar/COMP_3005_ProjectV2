@@ -46,11 +46,11 @@ public class FitnessGoalsController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PutMapping("/{goalId}/updateGoal")
-    public ResponseEntity<String> updateGoalDetails(@PathVariable Long goalId, @RequestParam String goalDate, @RequestParam String desc,
-                                                    @RequestParam double weight, @RequestParam double bodyFat, @RequestParam double muscleMass) {
+    @PutMapping("/updateGoal")
+    public ResponseEntity<String> updateGoalDetails(@RequestBody FitnessGoals goal) {
         try {
-            fitnessGoalsService.updateGoalDetails(goalId, goalDate, desc, weight, bodyFat, muscleMass);
+            fitnessGoalsService.updateGoalDetails(Long.valueOf(goal.getGoalID()), goal.getGoalDate(), goal.getGoalDescription()
+                    , goal.getTargetWeight(), goal.getTargetBodyFat(), goal.getTargetMuscleMass());
             return ResponseEntity.ok("Member's goal updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update member's goal");

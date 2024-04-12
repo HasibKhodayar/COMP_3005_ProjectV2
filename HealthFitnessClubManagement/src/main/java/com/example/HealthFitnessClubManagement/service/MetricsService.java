@@ -42,9 +42,9 @@ public class MetricsService {
         metricsRepository.deleteById(id);
     }
 
-    public void updateMetricDetails(Long metricId, String newMetricDate, double newWeight, double newHeight, double newBodyFat, double newMuscleMass){
+    public void updateMetricDetails(Long metricId, Date newMetricDate, double newWeight, double newHeight, double newBodyFat, double newMuscleMass){
         try{
-            metricsRepository.updateMetricDate(metricId, new Date(((new SimpleDateFormat("yyyy-MM-dd")).parse(newMetricDate)).getTime()));
+            metricsRepository.updateMetricDate(metricId, newMetricDate);
             metricsRepository.updateWeight(metricId, newWeight);
             metricsRepository.updateHeight(metricId, newHeight);
             metricsRepository.updateBodyFatPerc(metricId, newBodyFat);

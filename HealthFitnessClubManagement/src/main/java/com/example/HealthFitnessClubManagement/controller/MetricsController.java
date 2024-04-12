@@ -49,10 +49,10 @@ public class MetricsController {
     }
 
     @PutMapping("/{metricID}/updateMetric")
-    public ResponseEntity<String> updateMetricDetails(@PathVariable Long metricID, @RequestParam String metricDate,
-                                                    @RequestParam double weight, @RequestParam double height, @RequestParam double bodyFat, @RequestParam double muscleMass) {
+    public ResponseEntity<String> updateMetricDetails(@RequestBody HealthMetric metric) {
         try {
-            metricsService.updateMetricDetails(metricID, metricDate, weight, height, bodyFat, muscleMass);
+            metricsService.updateMetricDetails(metric.getId(), metric.getMetricDate(), metric.getWeight(),
+                    metric.getHeight(), metric.getBodyFatPercentage(), metric.getMuscleMass());
             return ResponseEntity.ok("Member's Health Metric updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update member's health metrics");
