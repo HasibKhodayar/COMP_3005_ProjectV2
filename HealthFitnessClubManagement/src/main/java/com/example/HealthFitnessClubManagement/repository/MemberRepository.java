@@ -41,4 +41,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("SELECT m FROM Member m WHERE m.firstName = :userFirstName AND m.lastName = :userLastName")
     List<Member> findMembersByFullName(String userFirstName, String userLastName);
 
+    @Query("SELECT m FROM Member m WHERE m.memberID = :memberId")
+    Member findMembersById(Long memberId);
+
 }

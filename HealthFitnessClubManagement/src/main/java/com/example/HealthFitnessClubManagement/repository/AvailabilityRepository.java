@@ -13,35 +13,55 @@ import java.util.List;
 public interface AvailabilityRepository extends JpaRepository<TrainerAvailability, Long> {
 
     @Modifying
-    @Query("Update TrainerAvailability SET timeSlot1 = :available WHERE id = :availabilityId")
-    boolean updateTimeSlot1(Long availabilityId, boolean available);
+    @Transactional
+    @Query("Update TrainerAvailability SET timeSlot1 = :available WHERE availabilityID = :availabilityId")
+    int updateTimeSlot1(Long availabilityId, boolean available);
 
     @Modifying
-    @Query("Update TrainerAvailability SET timeSlot2 = :available WHERE id = :availabilityId")
-    boolean updateTimeSlot2(Long availabilityId, boolean available);
+    @Transactional
+    @Query("Update TrainerAvailability SET timeSlot2 = :available WHERE availabilityID = :availabilityId")
+    int updateTimeSlot2(Long availabilityId, boolean available);
 
     @Modifying
-    @Query("Update TrainerAvailability SET timeSlot3 = :available WHERE id = :availabilityId")
-    boolean updateTimeSlot3(Long availabilityId, boolean available);
+    @Transactional
+    @Query("Update TrainerAvailability SET timeSlot3 = :available WHERE availabilityID = :availabilityId")
+    int updateTimeSlot3(Long availabilityId, boolean available);
 
     @Modifying
-    @Query("Update TrainerAvailability SET timeSlot4 = :available WHERE id = :availabilityId")
-    boolean updateTimeSlot4(Long availabilityId, boolean available);
+    @Transactional
+    @Query("Update TrainerAvailability SET timeSlot4 = :available WHERE availabilityID = :availabilityId")
+    int updateTimeSlot4(Long availabilityId, boolean available);
 
     @Modifying
-    @Query("Update TrainerAvailability SET timeSlot5 = :available WHERE id = :availabilityId")
-    boolean updateTimeSlot5(Long availabilityId, boolean available);
+    @Transactional
+    @Query("Update TrainerAvailability SET timeSlot5 = :available WHERE availabilityID = :availabilityId")
+    int updateTimeSlot5(Long availabilityId, boolean available);
 
     @Modifying
-    @Query("Update TrainerAvailability SET timeSlot6 = :available WHERE id = :availabilityId")
-    boolean updateTimeSlot6(Long availabilityId, boolean available);
+    @Transactional
+    @Query("Update TrainerAvailability SET timeSlot6 = :available WHERE availabilityID = :availabilityId")
+    int updateTimeSlot6(Long availabilityId, boolean available);
 
     @Modifying
-    @Query("Update TrainerAvailability SET timeSlot7 = :available WHERE id = :availabilityId")
-    boolean updateTimeSlot7(Long availabilityId, boolean available);
+    @Transactional
+    @Query("Update TrainerAvailability SET timeSlot7 = :available WHERE availabilityID = :availabilityId")
+    int updateTimeSlot7(Long availabilityId, boolean available);
 
     @Modifying
-    @Query("Update TrainerAvailability SET timeSlot8 = :available WHERE id = :availabilityId")
-    boolean updateTimeSlot8(Long availabilityId, boolean available);
+    @Transactional
+    @Query("Update TrainerAvailability SET timeSlot8 = :available WHERE availabilityID = :availabilityId")
+    int updateTimeSlot8(Long availabilityId, boolean available);
+
+    @Query("SELECT a FROM TrainerAvailability a WHERE a.trainer.memberID = :trainerId AND a.dayAvailable = :day")
+    TrainerAvailability findByTrainerAndDayAvailable(Long trainerId, String day);
+
+    @Query("SELECT a FROM TrainerAvailability a WHERE a.availabilityID = :availabilityId")
+    TrainerAvailability findByAvailabilityId(Long availabilityId);
+
+    @Query("SELECT a FROM TrainerAvailability a WHERE a.trainer.memberID = :trainerID")
+    List<TrainerAvailability> getAvailableDaysByTrainer(Long trainerID);
+
+    @Query("SELECT DISTINCT a.trainer FROM TrainerAvailability a")
+    List<Member> getTrainersAvailable();
 
 }

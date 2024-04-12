@@ -17,10 +17,10 @@ public class TrainerAvailability {
     @Column(name = "availabilityID")
     private Long availabilityID;
 
-    @ManyToOne(fetch = FetchType.LAZY)
     @Getter
     @Setter
-    @JoinColumn(name = "memberID")
+    @ManyToOne
+    @JoinColumn(name = "trainerID", referencedColumnName = "memberID")
     private Member trainer;
 
     @Getter

@@ -70,5 +70,8 @@ public class MemberService {
         return memberRepository.findMembersByFullName(firstName, lastName);
     }
 
+    public Member getMemberById(Long id){
+        return memberRepository.findMembersById(id);
+    }
 
 }

@@ -1,50 +1,42 @@
-//package com.example.HealthFitnessClubManagement.model;
-//
-//import jakarta.persistence.*;
-//import lombok.Getter;
-//import java.time.LocalTime;
-//import java.time.LocalDate;
-//
-//
-//@Entity
-//@Table(name = "PersonalTrainingSession")
-//public class PersonalTrainingSession {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "sessionID")
-//    private Long id;
-//
-//    @Getter
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "memberID")
-//    private Member member;
-//
-//    @Getter
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "trainerID")
-//    private Member trainer;
-//
-//    @Getter
-//    @Column(name = "scheduled_date", nullable = false)
-//    private LocalDate scheduledDate;
-//
-//    @Getter
-//    @Column(name = "scheduled_time", nullable = false)
-//    private LocalTime scheduledTime;
-//
-//    public void setMember(Member member) {
-//        this.member = member;
-//    }
-//
-//    public void setTrainer(Member trainer) {
-//        this.trainer = trainer;
-//    }
-//
-//    public void setScheduledDate(LocalDate scheduledDate) {
-//        this.scheduledDate = scheduledDate;
-//    }
-//
-//    public void setScheduledTime(LocalTime scheduledTime) {
-//        this.scheduledTime = scheduledTime;
-//    }
-//}
+package com.example.HealthFitnessClubManagement.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalTime;
+import java.time.LocalDate;
+
+
+@Entity
+@Table(name = "PersonalTrainingSession")
+public class PersonalTrainingSession {
+    @Id
+    @Getter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "sessionID")
+    private Long sessionId;
+
+    @Getter
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "memberID", referencedColumnName = "memberID")
+    private Member member;
+
+    @Getter
+    @Setter
+    @ManyToOne
+    @JoinColumn(name = "trainerID", referencedColumnName = "memberID")
+    private Member trainer;
+
+    @Getter
+    @Setter
+    @Column(name = "scheduled_date", nullable = false)
+    private String scheduledDate;
+
+    @Getter
+    @Setter
+    @Column(name = "scheduled_time", nullable = false)
+    private String scheduledTime;
+
+}
