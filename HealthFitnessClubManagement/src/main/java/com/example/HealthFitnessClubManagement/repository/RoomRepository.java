@@ -17,6 +17,7 @@ public interface RoomRepository extends JpaRepository<Room, Long> {
     @Query("SELECT r FROM Room r JOIN GroupFitnessClass c ON c.room.roomId = r.roomId WHERE c.classID = :classId")
     Room getRoomAssociatedWithClass(Long classId);
 
+    Room getRoomByRoomId(Long roomId);
 
     @Query("SELECT r FROM Room r LEFT OUTER JOIN GroupFitnessClass c ON c.room.roomId = r.roomId WHERE c.room.roomId IS NULL")
     List<Room> getAvailableRooms();

@@ -11,6 +11,7 @@ import java.sql.Date;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/equipment")
 public class EquipmentController {
 

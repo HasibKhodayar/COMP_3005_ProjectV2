@@ -24,6 +24,10 @@ public class RoomService {
     public List<RoomWithBookedStatus> getAllRooms(){
         return roomRepository.getAllRoomsWithBookingStatus();
     }
+
+    public Room getRoom(Long roomId) {
+        return roomRepository.getRoomByRoomId(roomId);
+    }
     public ResponseEntity<String> updateRoomBooking(Long roomId, Long classId){
 
         this.cancelRoomBooking(roomId);

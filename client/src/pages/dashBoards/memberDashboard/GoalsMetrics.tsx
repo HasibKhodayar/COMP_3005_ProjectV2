@@ -25,7 +25,6 @@ import AccessibilityIcon from "@mui/icons-material/Accessibility";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import dayjs from "dayjs";
-import { Height } from "@/components/types";
 
 function GoalsMetrics({ user }: { user: any }) {
   const [userGoal, setUserGoal] = useState<any>("");

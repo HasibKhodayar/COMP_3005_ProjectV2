@@ -64,7 +64,7 @@ const LogIn = () => {
               required
             />
             <input
-              type="text"
+              type="password"
               value={password}
               placeholder="Password"
               style={{ width: "300px", height: "25px", fontSize: "15px" }}

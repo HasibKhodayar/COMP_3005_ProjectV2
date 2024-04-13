@@ -61,13 +61,13 @@ function Exercises({ user }: { user: any }) {
 
   return (
     <>
-      <Typography variant="h4" style={{ padding: "20px" }}>
-        Exercises
+      <div style={{ padding: "20px" }}>
+        <h1>Exercises</h1>
         <Typography>
           This is where you can view any set exercises you have. You can also
           add new ones by filling out the form below and clicking save.
         </Typography>
-      </Typography>
+      </div>
 
       <form
         onSubmit={submitExercise}

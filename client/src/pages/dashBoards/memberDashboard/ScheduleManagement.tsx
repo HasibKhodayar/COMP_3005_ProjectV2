@@ -27,6 +27,8 @@ function ScheduleManagement({ user }: { user: any }) {
   const [availableTimes, setAvailableTimes] = useState<any[]>([]);
   const [expandedAccordion, setExpandedAccordion] = useState(false);
   const [memberBookedSessions, setMemberBookedSessions] = useState<any[]>([]);
+  const [fitnessClasses, setFitnessClasses] = useState<any[]>([]);
+  const [bookedFitnessClasses, setBookedFitnessClasses] = useState<any[]>([]);
 
   const getBookedSessions = async () => {
     try {
@@ -34,9 +36,43 @@ function ScheduleManagement({ user }: { user: any }) {
         `http://localhost:8080/availability/${user.memberID}/getSessions`
       );
       console.log("List of booked sessions:", response.data);
+
+      // filter out any sessions that have been cancelled by the trainer
+      // const filteredSessions = await Promise.all(
+      //   response.data.map(async (session: any) => {
+      //     const isTrainerAvailable = await trainerStillAvailable(session);
+      //     return isTrainerAvailable ? session : null;
+      //   })
+      // );
+
+      // console.log("filteredSessions:", filteredSessions);
+
       setMemberBookedSessions(response.data);
     } catch (error) {
       console.log("Error retrieving booked sessions:", error);
+    }
+  };
+
+  const getBookedFitnessClasses = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/groupClasses/${user.memberID}/getClasses`
+      );
+      console.log("List of booked fitness classes:", response.data);
+      setBookedFitnessClasses(response.data);
+    } catch (error) {
+      console.log("Error retrieving booked fitness classes:", error);
+    }
+  };
+  const getFitnessClasses = async () => {
+    try {
+      const response = await axios.get(
+        `http://localhost:8080/groupClasses/getAllClasses`
+      );
+      console.log("List of available group fitness classes:", response.data);
+      setFitnessClasses(response.data);
+    } catch (error) {
+      console.log("Error retrieving available fitness classes:", error);
     }
   };
 
@@ -105,168 +141,363 @@ function ScheduleManagement({ user }: { user: any }) {
     }
   };
 
+  const registerClass = async (classID: number) => {
+    console.log("registering class with ID:", classID);
+    try {
+      await axios.post(
+        `http://localhost:8080/groupClasses/${user.memberID}/${classID}/register`,
+        null
+      );
+      console.log("Successfully registered for class");
+      getFitnessClasses();
+      getBookedFitnessClasses();
+    } catch (error) {
+      console.log("Error registering for class:", error);
+    }
+  };
+
+  const cancelFitnessClass = async (classID: number) => {
+    console.log("registering class with ID:", classID);
+    try {
+      await axios.delete(
+        `http://localhost:8080/groupClasses/${user.memberID}/${classID}/unRegister`
+      );
+      console.log("Successfully un-registered for class");
+      getFitnessClasses();
+      getBookedFitnessClasses();
+    } catch (error) {
+      console.log("Error un-registering for class:", error);
+    }
+  };
+
+  // const trainerStillAvailable = async (session: any) => {
+  //   const response = await axios.get(
+  //     `http://localhost:8080/availability/${user.memberID}/getAvailableDays`
+  //   );
+  //   console.log("Successfully retrieved available days for trainer:", response);
+  //   const availableDays = response.data.map((day: any) => day.dayAvailable);
+
+  //   if (availableDays.includes(session.scheduledDate)) {
+  //     return true;
+  //   } else {
+  //     deleteSession(session.sessionId);
+  //     return false;
+  //   }
+  // };
+
   useEffect(() => {
     getAvailableTrainers();
+    getFitnessClasses();
     getBookedSessions();
+    getBookedFitnessClasses();
   }, []);
 
   return (
     <div>
-      <Typography variant="h4">
-        Schedule Management
+      <div style={{ paddingBottom: "20px" }}>
+        <h1>Schedule Management</h1>
         <Typography>
-          This is where you can book sessions with a trainer. You can also view
-          past sessions and cancel upcoming sessions.
+          This is where you can book sessions with a trainer, or register for a
+          group fitness class. You can also view past sessions and cancel
+          upcoming sessions.
         </Typography>
-      </Typography>
-      <Divider style={{ margin: "20px" }} />
-      <Typography variant="h5">Available Trainers</Typography>
-      <List
-        sx={{
-          width: "100%",
-          maxWidth: 360,
-          bgcolor: "background.paper",
-        }}
-      >
-        {availableTrainers.map((trainer) => (
-          <ListItem key={trainer.trainerID}>
-            <ListItemAvatar>
-              <Avatar sx={{ bgcolor: "#f9a826" }}>
-                <AccountBoxIcon />
-              </Avatar>
-            </ListItemAvatar>
-            <ListItemText
-              primary={`${trainer.firstName} ${trainer.lastName}`}
-            />
-            <div>
-              <Button
-                variant="contained"
-                sx={{ bgcolor: "#f9a826", color: "white" }}
-                onClick={() => handleSelectTrainer(trainer)}
-              >
-                Book
-              </Button>
-            </div>
-          </ListItem>
-        ))}
-      </List>
+      </div>
 
-      {selectedTrainer && availableDays.length > 0 && (
-        <>
-          <Typography
-            variant="h5"
-            style={{ paddingTop: "30px", paddingBottom: "20px" }}
-          >
-            Available Sessions with {selectedTrainer.firstName}
-            <Typography>
-              {selectedTrainer.firstName}'s availability is listed below. Please
-              book a session based on the times listed below. If these times do
-              not match your schedule, select another available trainer.
-            </Typography>
-            <Alert severity="info" style={{ margin: "5px" }}>
-              <b>Note:</b> Each training session is 1 hr. long
-            </Alert>
-          </Typography>
-
-          {availableDays.map((day, index) => (
-            <div key={index}>
-              <Accordion
-                style={{ marginBottom: "10px" }}
-                onChange={() => handleDayClicked(day)}
-                expanded={expandedAccordion}
-              >
-                <AccordionSummary
-                  expandIcon={<ArrowDownwardIcon />}
-                  onClick={() => setExpandedAccordion(!expandedAccordion)}
-                  aria-controls="panel1-content"
-                  id="panel1-header"
-                >
-                  <Typography>{day.dayAvailable}</Typography>
-                </AccordionSummary>
-                <AccordionDetails>
-                  <Typography>
-                    {availableTimes && availableTimes.length > 0 && (
-                      <Typography>
-                        {availableTimes.map((time, index) => (
-                          <div key={index}>
-                            <Button
-                              variant="contained"
-                              sx={{
-                                bgcolor: "#f9a826",
-                                color: "white",
-                                width: "100px",
-                                margin: "5px",
-                              }}
-                              onClick={() =>
-                                handleBookSession(day.dayAvailable, time)
-                              }
-                            >
-                              {time}
-                            </Button>
-                          </div>
-                        ))}
-                      </Typography>
-                    )}
-                  </Typography>
-                </AccordionDetails>
-              </Accordion>
-            </div>
-          ))}
-        </>
-      )}
-
-      <Typography
-        variant="h5"
-        style={{ paddingTop: "30px", paddingBottom: "20px" }}
-      >
-        Your Booked Sessions
-        <Typography>
-          Below you can view successfully booked sessions. Cancel any upcoming
-          session by clicking the red button next to it.
-        </Typography>
-      </Typography>
-
-      <div
-        style={{
-          display: "flex",
-          flexDirection: "row",
-          flexWrap: "wrap",
-          gap: "5px",
-        }}
-      >
-        {memberBookedSessions && memberBookedSessions.length > 0 ? (
-          memberBookedSessions.map((session, index) => (
-            <Card sx={{ minWidth: 275 }} key={index}>
-              <CardContent>
-                <Typography variant="h6">Booking Details</Typography>
-
-                <Typography gutterBottom color="text.secondary">
-                  <b>Scheduled Date:</b> {session.scheduledDate}
-                </Typography>
-                <Typography gutterBottom color="text.secondary">
-                  <b>Scheduled Time:</b> {session.scheduledTime}
-                </Typography>
-                <Typography gutterBottom color="text.secondary">
-                  <b>Trainer:</b> {session.trainer.firstName}{" "}
-                  {session.trainer.lastName}
-                </Typography>
-              </CardContent>
-              <CardActions>
+      <Divider style={{ marginBottom: "20px" }} />
+      <h2>Personal Training Sessions</h2>
+      <div style={{ paddingLeft: "20px" }}>
+        <Typography variant="h5">Available Trainers</Typography>
+        <List
+          sx={{
+            width: "100%",
+            maxWidth: 360,
+            bgcolor: "background.paper",
+          }}
+        >
+          {availableTrainers.map((trainer) => (
+            <ListItem key={trainer.trainerID}>
+              <ListItemAvatar>
+                <Avatar sx={{ bgcolor: "#f9a826" }}>
+                  <AccountBoxIcon />
+                </Avatar>
+              </ListItemAvatar>
+              <ListItemText
+                primary={`${trainer.firstName} ${trainer.lastName}`}
+              />
+              <div>
                 <Button
-                  size="small"
-                  sx={{ color: "#f9a826" }}
-                  onClick={() => deleteSession(session.sessionId)}
+                  variant="contained"
+                  sx={{ bgcolor: "#f9a826", color: "white" }}
+                  onClick={() => handleSelectTrainer(trainer)}
                 >
-                  DELETE
+                  Book
                 </Button>
-              </CardActions>
-            </Card>
-          ))
-        ) : (
-          <Typography variant="body2" color="text.secondary">
-            No booked sessions found.
-          </Typography>
+              </div>
+            </ListItem>
+          ))}
+        </List>
+
+        {selectedTrainer && availableDays.length > 0 && (
+          <>
+            <Typography
+              variant="h5"
+              style={{ paddingTop: "30px", paddingBottom: "20px" }}
+            >
+              Available Sessions with {selectedTrainer.firstName}
+              <Typography>
+                {selectedTrainer.firstName}'s availability is listed below.
+                Please book a session based on the times listed below. If these
+                times do not match your schedule, select another available
+                trainer.
+              </Typography>
+              <Alert severity="info" style={{ margin: "5px" }}>
+                <b>Note:</b> Each training session is 1 hr. long
+              </Alert>
+            </Typography>
+
+            {availableDays.map((day, index) => (
+              <div key={index}>
+                <Accordion
+                  style={{ marginBottom: "10px" }}
+                  onChange={() => handleDayClicked(day)}
+                  expanded={expandedAccordion}
+                >
+                  <AccordionSummary
+                    expandIcon={<ArrowDownwardIcon />}
+                    onClick={() => setExpandedAccordion(!expandedAccordion)}
+                    aria-controls="panel1-content"
+                    id="panel1-header"
+                  >
+                    <Typography>{day.dayAvailable}</Typography>
+                  </AccordionSummary>
+                  <AccordionDetails>
+                    <Typography>
+                      {availableTimes && availableTimes.length > 0 && (
+                        <Typography>
+                          {availableTimes.map((time, index) => (
+                            <div key={index}>
+                              <Button
+                                variant="contained"
+                                sx={{
+                                  bgcolor: "#f9a826",
+                                  color: "white",
+                                  width: "100px",
+                                  margin: "5px",
+                                }}
+                                onClick={() =>
+                                  handleBookSession(day.dayAvailable, time)
+                                }
+                              >
+                                {time}
+                              </Button>
+                            </div>
+                          ))}
+                        </Typography>
+                      )}
+                    </Typography>
+                  </AccordionDetails>
+                </Accordion>
+              </div>
+            ))}
+          </>
         )}
+
+        <Typography
+          variant="h5"
+          style={{ paddingTop: "30px", paddingBottom: "20px" }}
+        >
+          Your Booked Sessions
+          <Typography>
+            Below you can view successfully booked sessions. Cancel any upcoming
+            session by clicking the cancel button.
+          </Typography>
+        </Typography>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: "5px",
+          }}
+        >
+          {memberBookedSessions && memberBookedSessions.length > 0 ? (
+            memberBookedSessions.map((session, index) => (
+              <Card sx={{ minWidth: 275 }} key={index}>
+                <CardContent>
+                  <Typography variant="h6">Booking Details</Typography>
+
+                  <Typography gutterBottom color="text.secondary">
+                    <b>Scheduled Date:</b> {session.scheduledDate}
+                  </Typography>
+                  <Typography gutterBottom color="text.secondary">
+                    <b>Scheduled Time:</b> {session.scheduledTime}
+                  </Typography>
+                  <Typography gutterBottom color="text.secondary">
+                    <b>Trainer:</b> {session.trainer.firstName}{" "}
+                    {session.trainer.lastName}
+                  </Typography>
+                </CardContent>
+                <CardActions>
+                  <Button
+                    size="small"
+                    sx={{ color: "#f9a826" }}
+                    onClick={() => deleteSession(session.sessionId)}
+                  >
+                    CANCEL SESSION
+                  </Button>
+                </CardActions>
+              </Card>
+            ))
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              No booked sessions found.
+            </Typography>
+          )}
+        </div>
+      </div>
+
+      <Divider style={{ marginBottom: "20px", marginTop: "20px" }} />
+      <h2>Group Fitness Classes</h2>
+      <div style={{ paddingLeft: "20px" }}>
+        <Typography
+          variant="h5"
+          style={{ paddingTop: "30px", paddingBottom: "20px" }}
+        >
+          Available Fitness Classes
+          <Typography>
+            Press book to register inside a group fitness class of your choice.
+          </Typography>
+        </Typography>
+
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: "5px",
+          }}
+        >
+          {fitnessClasses.length > 0 ? (
+            fitnessClasses.map((fitnessClass, index) => {
+              // Check if the current fitness class is already booked
+              const isBooked = bookedFitnessClasses.some(
+                (bookedClass) => bookedClass.classID === fitnessClass.classID
+              );
+              const classCancelled = fitnessClass.room === null;
+
+              return (
+                <Card sx={{ minWidth: 275 }} key={index}>
+                  <CardContent>
+                    <Typography variant="h6">
+                      {fitnessClass.className}
+                    </Typography>
+                    <Typography gutterBottom color="text.secondary">
+                      <b>Scheduled Date:</b> {fitnessClass.scheduledDate}
+                    </Typography>
+                    <Typography gutterBottom color="text.secondary">
+                      <b>Scheduled Time:</b> {fitnessClass.scheduledTime}
+                    </Typography>
+                    <Typography gutterBottom color="text.secondary">
+                      <b>Room:</b> {fitnessClass.room?.roomName ?? "N/A"}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    {isBooked ? (
+                      <Button size="small" color="info" disabled>
+                        ALREADY BOOKED
+                      </Button>
+                    ) : fitnessClass.numberMembers ===
+                      fitnessClass.room?.capacity ? (
+                      <Button size="small" color="error" disabled>
+                        CLASS FULL
+                      </Button>
+                    ) : fitnessClass.room === null ? (
+                      <Button size="small" color="error" disabled>
+                        CANCELLED
+                      </Button>
+                    ) : (
+                      <Button
+                        size="small"
+                        sx={{ color: "#f9a826" }}
+                        onClick={() => registerClass(fitnessClass.classID)}
+                      >
+                        REGISTER
+                      </Button>
+                    )}
+                  </CardActions>
+                </Card>
+              );
+            })
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              No fitness classes available.
+            </Typography>
+          )}
+        </div>
+
+        <Typography
+          variant="h5"
+          style={{ paddingTop: "30px", paddingBottom: "20px" }}
+        >
+          Your Booked Classes
+          <Typography>
+            Below you can view successfully booked fitness group classes. Cancel
+            any upcoming session by clicking the cancel button.
+          </Typography>
+        </Typography>
+        <div
+          style={{
+            display: "flex",
+            flexDirection: "row",
+            flexWrap: "wrap",
+            gap: "5px",
+          }}
+        >
+          {bookedFitnessClasses.length > 0 ? (
+            bookedFitnessClasses.map((fitnessClass, index) => {
+              const classCancelled = fitnessClass.room === null;
+              return (
+                <Card sx={{ minWidth: 275 }} key={index}>
+                  <CardContent>
+                    <Typography variant="h6">
+                      {fitnessClass.className}
+                    </Typography>
+                    <Typography gutterBottom color="text.secondary">
+                      <b>Scheduled Date:</b> {fitnessClass.scheduledDate}
+                    </Typography>
+                    <Typography gutterBottom color="text.secondary">
+                      <b>Scheduled Time:</b> {fitnessClass.scheduledTime}
+                    </Typography>
+                    <Typography gutterBottom color="text.secondary">
+                      <b>Room:</b>{" "}
+                      {classCancelled ? "N/A" : fitnessClass.room.roomName}
+                    </Typography>
+                  </CardContent>
+                  <CardActions>
+                    {!classCancelled ? (
+                      <Button
+                        size="small"
+                        sx={{ color: "#f9a826" }}
+                        onClick={() => cancelFitnessClass(fitnessClass.classID)}
+                      >
+                        CANCEL
+                      </Button>
+                    ) : (
+                      <Button size="small" sx={{ color: "#f9a826" }} disabled>
+                        CANCELLED
+                      </Button>
+                    )}
+                  </CardActions>
+                </Card>
+              );
+            })
+          ) : (
+            <Typography variant="body2" color="text.secondary">
+              You have not booked any fitness classes.
+            </Typography>
+          )}
+        </div>
       </div>
     </div>
   );

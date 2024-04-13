@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/rooms")
 public class RoomController {
 
@@ -21,6 +22,11 @@ public class RoomController {
     @GetMapping("/getAllRooms")
     public ResponseEntity<List<RoomWithBookedStatus>> getAllRooms(){
         return new ResponseEntity<>(roomService.getAllRooms(), HttpStatus.OK);
+    }
+
+    @GetMapping("/{roomId}/getRoom")
+    public ResponseEntity<Room> getRoom(@PathVariable Long roomId){
+        return new ResponseEntity<>(roomService.getRoom(roomId), HttpStatus.OK);
     }
 
     @PutMapping("/{roomId}/{classId}/updateRoomBooking")

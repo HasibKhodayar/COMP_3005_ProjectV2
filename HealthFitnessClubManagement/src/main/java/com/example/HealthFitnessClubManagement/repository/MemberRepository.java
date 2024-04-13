@@ -38,7 +38,7 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Query("UPDATE Member m SET m.password = :newPassword WHERE m.memberID = :member_id")
     void updateMemberPasswordById(Long member_id, String newPassword);
 
-    @Query("SELECT m FROM Member m WHERE m.firstName = :userFirstName AND m.lastName = :userLastName")
+    @Query("SELECT m FROM Member m WHERE m.firstName = :userFirstName AND m.lastName = :userLastName AND m.memberTypeId = 1")
     List<Member> findMembersByFullName(String userFirstName, String userLastName);
 
     @Query("SELECT m FROM Member m WHERE m.memberID = :memberId")
