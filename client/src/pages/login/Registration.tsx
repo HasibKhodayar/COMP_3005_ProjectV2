@@ -141,7 +141,7 @@ const Registration = () => {
               type="submit"
               style={{
                 marginBottom: "20px",
-                backgroundColor: "#F9A826",
+                backgroundColor: "#f9a826",
                 color: "white",
                 border: "none",
                 padding: "10px 20px",
@@ -161,7 +161,7 @@ const Registration = () => {
             href="/logIn"
             style={{
               textDecoration: "none",
-              color: "#F9A826",
+              color: "#f9a826",
               fontWeight: "bold",
             }}
           >

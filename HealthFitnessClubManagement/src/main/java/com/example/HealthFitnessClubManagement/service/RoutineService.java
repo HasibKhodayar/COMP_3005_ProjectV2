@@ -19,7 +19,7 @@ public class RoutineService {
     public ResponseEntity<String> saveRoutine(ExerciseRoutine routine) {
         try {
             routineRepository.save(routine);
-            return ResponseEntity.ok("Succesfully created excerise routine");
+            return ResponseEntity.ok("Successfully created exercise routine");
         }catch (Exception e) {
             e.printStackTrace();
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("An error occurred during routine creation");

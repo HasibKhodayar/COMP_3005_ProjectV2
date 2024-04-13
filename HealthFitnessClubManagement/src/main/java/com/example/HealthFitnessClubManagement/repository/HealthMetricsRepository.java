@@ -28,7 +28,7 @@ public interface HealthMetricsRepository extends JpaRepository<HealthMetric, Lon
 
     @Modifying
     @Transactional
-    @Query("UPDATE HealthMetric m SET m.bodyFatPercentage = :newBodyFat WHERE m.id = :metricID")
+    @Query("UPDATE HealthMetric m SET m.bodyFat = :newBodyFat WHERE m.id = :metricID")
     void updateBodyFatPerc(Long metricID, Double newBodyFat);
 
     @Modifying
@@ -39,6 +39,6 @@ public interface HealthMetricsRepository extends JpaRepository<HealthMetric, Lon
     @Query("SELECT m FROM HealthMetric m WHERE m.member.memberID = :memberID ORDER BY m.metricDate DESC LIMIT 1")
     HealthMetric findMostRecentMetric(Long memberID);
 
-    @Query("SELECT m FROM HealthMetric m WHERE m.member.memberID = :memberID")
+    @Query("SELECT m FROM HealthMetric m WHERE m.member.memberID = :memberID ORDER BY m.metricDate ASC")
     List<HealthMetric> findAllMetrics(Long memberID);
 }

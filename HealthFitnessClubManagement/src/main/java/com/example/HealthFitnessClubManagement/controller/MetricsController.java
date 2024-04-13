@@ -1,6 +1,5 @@
 package com.example.HealthFitnessClubManagement.controller;
 
-import com.example.HealthFitnessClubManagement.model.FitnessGoals;
 import com.example.HealthFitnessClubManagement.model.HealthMetric;
 import com.example.HealthFitnessClubManagement.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -8,7 +7,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Date;
 import java.util.List;
 
 @RestController
@@ -48,10 +46,11 @@ public class MetricsController {
     }
 
     @PutMapping("/{metricID}/updateMetric")
-    public ResponseEntity<String> updateMetricDetails(@RequestBody HealthMetric metric) {
+    public ResponseEntity<String> updateMetricDetails(@PathVariable("metricID") Long metricID, @RequestBody HealthMetric metric) {
         try {
-            metricsService.updateMetricDetails(metric.getId(), metric.getWeight(),
-                    metric.getHeight(), metric.getBodyFatPercentage(), metric.getMuscleMass());
+            metricsService.updateMetricDetails(metricID, metric.getWeight(),
+                    metric.getHeight(), metric.getBodyFat(), metric.getMuscleMass());
+
             return ResponseEntity.ok("Member's Health Metric updated successfully");
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to update member's health metrics");

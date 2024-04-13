@@ -5,6 +5,7 @@ import Dashboard from "./Dashboard";
 import ProfileSettings from "./ProfileSettings";
 import ScheduleManagement from "./ScheduleManagement";
 import GoalsMetrics from "./GoalsMetrics";
+import Exercises from "./Exercises";
 
 const MemberDashboard = ({ user }: { user: any }) => {
   const [activeSection, setActiveSection] = useState<string>("dashboard");
@@ -18,7 +19,7 @@ const MemberDashboard = ({ user }: { user: any }) => {
       <nav
         className="navbar"
         style={{
-          backgroundColor: "#F9A826",
+          backgroundColor: "#f9a826",
           display: "flex",
           flexDirection: "row",
           gap: "30px",
@@ -51,6 +52,15 @@ const MemberDashboard = ({ user }: { user: any }) => {
           onClick={() => handleNavClick("goals")}
         >
           Metrics and Goals
+        </Button>
+        <Button
+          style={{ color: "white", fontWeight: "bold" }}
+          className={`navbar-button ${
+            activeSection === "exercises" ? "active" : ""
+          }`}
+          onClick={() => handleNavClick("exercises")}
+        >
+          Exercises
         </Button>
         <Button
           style={{ color: "white", fontWeight: "bold" }}
@@ -91,6 +101,11 @@ const MemberDashboard = ({ user }: { user: any }) => {
         {activeSection === "schedule" && (
           <div>
             <ScheduleManagement user={user} />
+          </div>
+        )}
+        {activeSection === "exercises" && (
+          <div>
+            <Exercises user={user} />
           </div>
         )}
       </div>

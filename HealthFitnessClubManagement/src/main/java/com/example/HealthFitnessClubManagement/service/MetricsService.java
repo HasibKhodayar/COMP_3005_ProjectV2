@@ -38,7 +38,7 @@ public class MetricsService {
             metricc.setMember(metric.getMember());
             metricc.setHeight(metric.getHeight());
             metricc.setWeight(metric.getWeight());
-            metricc.setBodyFatPercentage(metric.getBodyFatPercentage());
+            metricc.setBodyFat(metric.getBodyFat());
             metricc.setMuscleMass(metric.getMuscleMass());
             metricc.setMetricDate(LocalDateTime.now());
 

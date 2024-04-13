@@ -42,7 +42,7 @@ public class HealthMetric {
     @Getter
     @Setter
     @Column(name = "body_fat_perc")
-    private Double bodyFatPercentage;
+    private Double bodyFat;
 
     @Getter
     @Setter

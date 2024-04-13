@@ -15,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RestController
+@CrossOrigin
 @RequestMapping("/availability")
 public class AvailabilityController {
     private final AvailablityService availablityService;
@@ -64,7 +65,7 @@ public class AvailabilityController {
             Member member = memberService.getMemberById(memberId);
             Member trainer = memberService.getMemberById(trainerId);
             availablityService.createPrivateSession(member, trainer, day, time);
-            return ResponseEntity.ok("Sucesfully Booked Session");
+            return ResponseEntity.ok("Successfully Booked Session");
         }
         else {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Failed to book Session");
