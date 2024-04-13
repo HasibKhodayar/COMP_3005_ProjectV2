@@ -23,7 +23,8 @@ public class GroupClassService {
 
     public ResponseEntity<String> registerForClass(Member member, GroupFitnessClass groupClass) {
         try {
-            if(groupClass.getNumberMembers() < (roomRepository.getRoomAssociatedWithClass(groupClass.getClassID())).getCapacity()){
+            Room classRoom = roomRepository.getRoomAssociatedWithClass(groupClass.getClassID());
+            if(classRoom == null || groupClass.getNumberMembers() < (classRoom.getCapacity())){
                 TakesClass t = new TakesClass();
                 t.setMember(member);
                 t.setGroupFitnessClass(groupClass);
@@ -93,6 +94,11 @@ public class GroupClassService {
 
     public ResponseEntity<String> deleteClass(Long classId){
         try {
+            List<TakesClass> takesClasses = takesClassRepository.getTakesByClass(classId);
+            for(TakesClass t: takesClasses){
+                takesClassRepository.delete(t);
+            }
+            roomRepository.cancelRoomBookedForClass(classId);
             GroupFitnessClass group_class = classRepository.getClassById(classId);
             classRepository.delete(group_class);
             return ResponseEntity.ok("Deleted class successfully");
