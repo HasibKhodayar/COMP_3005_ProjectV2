@@ -5,6 +5,7 @@ import lombok.Setter;
 
 import java.sql.Date;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 
 @Entity
@@ -18,6 +19,7 @@ public class HealthMetric {
     private Long id;
 
     @Getter
+    @Setter
     @ManyToOne
     @JoinColumn(name = "memberID", referencedColumnName = "memberID")
     private Member member;
@@ -25,7 +27,7 @@ public class HealthMetric {
     @Getter
     @Setter
     @Column(name = "metric_date")
-    private Date metricDate;
+    private LocalDateTime metricDate;
 
     @Getter
     @Setter

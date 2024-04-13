@@ -25,9 +25,8 @@ public class MetricsController {
     }
 
     @PostMapping
-    public ResponseEntity<HealthMetric> createHealthMetric(@RequestBody HealthMetric metric) {
-        HealthMetric createdHealthMetric = metricsService.saveHealthMetric(metric);
-        return new ResponseEntity<>(createdHealthMetric, HttpStatus.CREATED);
+    public ResponseEntity<String> createHealthMetric(@RequestBody HealthMetric metric) {
+        return metricsService.createHealthMetric(metric);
     }
 
     @GetMapping("/{id}/getAllMetrics")
