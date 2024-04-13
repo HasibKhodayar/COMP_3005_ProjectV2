@@ -42,9 +42,8 @@ public class MetricsService {
         metricsRepository.deleteById(id);
     }
 
-    public void updateMetricDetails(Long metricId, Date newMetricDate, double newWeight, double newHeight, double newBodyFat, double newMuscleMass){
+    public void updateMetricDetails(Long metricId, double newWeight, double newHeight, double newBodyFat, double newMuscleMass){
         try{
-            metricsRepository.updateMetricDate(metricId, newMetricDate);
             metricsRepository.updateWeight(metricId, newWeight);
             metricsRepository.updateHeight(metricId, newHeight);
             metricsRepository.updateBodyFatPerc(metricId, newBodyFat);

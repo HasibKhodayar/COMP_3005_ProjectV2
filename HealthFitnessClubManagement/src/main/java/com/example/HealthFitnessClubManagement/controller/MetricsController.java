@@ -51,7 +51,7 @@ public class MetricsController {
     @PutMapping("/{metricID}/updateMetric")
     public ResponseEntity<String> updateMetricDetails(@RequestBody HealthMetric metric) {
         try {
-            metricsService.updateMetricDetails(metric.getId(), metric.getMetricDate(), metric.getWeight(),
+            metricsService.updateMetricDetails(metric.getId(), metric.getWeight(),
                     metric.getHeight(), metric.getBodyFatPercentage(), metric.getMuscleMass());
             return ResponseEntity.ok("Member's Health Metric updated successfully");
         } catch (Exception e) {

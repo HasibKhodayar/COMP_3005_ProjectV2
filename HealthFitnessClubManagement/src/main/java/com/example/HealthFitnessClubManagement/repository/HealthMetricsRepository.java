@@ -18,11 +18,6 @@ public interface HealthMetricsRepository extends JpaRepository<HealthMetric, Lon
 
     @Modifying
     @Transactional
-    @Query("UPDATE HealthMetric m SET m.metricDate = :newDate WHERE m.id = :metricID")
-    void updateMetricDate(Long metricID, Date newDate);
-
-    @Modifying
-    @Transactional
     @Query("UPDATE HealthMetric m SET m.weight = :newWeight WHERE m.id = :metricID")
     void updateWeight(Long metricID, Double newWeight);
 
