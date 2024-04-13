@@ -94,5 +94,10 @@ public class MemberController {
         }
     }
 
+    @GetMapping("/{firstName}/{lastName}/searchMember")
+    public ResponseEntity<List<Member>> getMemberByNameAndLastName(@PathVariable String firstName, @PathVariable String lastName){
+        return new ResponseEntity<>(memberService.findMemberByName(firstName,lastName), HttpStatus.OK);
+    }
+
 
 }

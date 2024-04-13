@@ -35,6 +35,4 @@ public class Member {
     @Column(name = "member_type_id")
     private Integer memberTypeId;
 
-
-    // Constructors
 }

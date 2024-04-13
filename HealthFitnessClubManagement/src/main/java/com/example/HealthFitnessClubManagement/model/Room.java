@@ -1,42 +1,31 @@
-//package com.example.HealthFitnessClubManagement.model;
-//
-//import jakarta.persistence.*;
-//import lombok.Getter;
-//import java.time.LocalTime;
-//import java.time.LocalDate;
-//
-//@Entity
-//@Table(name = "Room")
-//public class Room {
-//    @Id
-//    @GeneratedValue(strategy = GenerationType.IDENTITY)
-//    @Column(name = "roomID")
-//    private Long id;
-//
-//    @Getter
-//    @Column(name = "room_name", nullable = false)
-//    private String roomName;
-//
-//    @Getter
-//    @Column(name = "capacity", nullable = false)
-//    private int capacity;
-//
-//    @Getter
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "classID")
-//    private GroupFitnessClass groupFitnessClass;
-//
-//
-//    public void setRoomName(String roomName) {
-//        this.roomName = roomName;
-//    }
-//
-//    public void setCapacity(int capacity) {
-//        this.capacity = capacity;
-//    }
-//
-//    public void setGroupFitnessClass(GroupFitnessClass groupFitnessClass) {
-//        this.groupFitnessClass = groupFitnessClass;
-//    }
-//
-//}
+package com.example.HealthFitnessClubManagement.model;
+
+import jakarta.persistence.*;
+import lombok.Getter;
+import lombok.Setter;
+
+import java.time.LocalTime;
+import java.time.LocalDate;
+
+@Entity
+@Table(name = "Room")
+public class Room {
+    @Id
+    @Getter
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "roomID")
+    private Long roomId;
+
+    @Getter
+    @Setter
+    @Column(name = "room_name", nullable = false)
+    private String roomName;
+
+    @Getter
+    @Setter
+    @Column(name = "capacity", nullable = false)
+    private int capacity;
+
+
+
+}
