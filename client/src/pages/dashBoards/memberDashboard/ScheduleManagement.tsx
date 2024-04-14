@@ -8,17 +8,27 @@ import {
   Card,
   CardActions,
   CardContent,
+  Dialog,
+  DialogActions,
+  DialogContent,
+  DialogContentText,
+  DialogTitle,
+  IconButton,
   Divider,
   List,
   ListItem,
   ListItemAvatar,
   ListItemText,
   Typography,
+  TextField,
 } from "@mui/material";
 import axios from "axios";
+import CloseIcon from "@mui/icons-material/Close";
+
 import React, { useState, useEffect } from "react";
 import AccountBoxIcon from "@mui/icons-material/AccountBox";
 import ArrowDownwardIcon from "@mui/icons-material/ArrowDownward";
+import { PurchaseType, ChargeType } from "../../../components/types";
 
 function ScheduleManagement({ user }: { user: any }) {
   const [availableTrainers, setAvailableTrainers] = useState<any[]>([]);
@@ -29,6 +39,17 @@ function ScheduleManagement({ user }: { user: any }) {
   const [memberBookedSessions, setMemberBookedSessions] = useState<any[]>([]);
   const [fitnessClasses, setFitnessClasses] = useState<any[]>([]);
   const [bookedFitnessClasses, setBookedFitnessClasses] = useState<any[]>([]);
+  const [bookingConfirmationPersonal, setBookingConfirmationPersonal] =
+    useState<{
+      day: string | null;
+      open: boolean;
+      time: string | null;
+    }>({ day: null, open: false, time: null });
+
+  const [bookingConfirmationGroup, setBookingConfirmationGroup] = useState<{
+    open: boolean;
+    id: number | null;
+  }>({ id: null, open: false });
 
   const getBookedSessions = async () => {
     try {
@@ -113,12 +134,19 @@ function ScheduleManagement({ user }: { user: any }) {
     }
   };
 
-  const handleBookSession = async (day: string, time: string) => {
+  const handleBookSession = async (day: string | null, time: string | null) => {
     // implement booking session
     try {
+      if (!day || !time) {
+        throw new Error("Please select a date and time to book a session.");
+      }
       await axios.put(
         `http://localhost:8080/availability/${user.memberID}/${selectedTrainer.memberID}/${day}/${time}/bookSession`,
         null
+      );
+      createBill(
+        PurchaseType.PRIVATE_SESSION,
+        ChargeType.PRIVATE_SESSION_CHARGE
       );
       getAvailableTrainers();
       setExpandedAccordion(false);
@@ -135,20 +163,28 @@ function ScheduleManagement({ user }: { user: any }) {
         `http://localhost:8080/availability/${sessionID}/cancelSession`
       );
       console.log("Successfully cancelled session");
+      createBill(
+        PurchaseType.PRIVATE_SESSION,
+        ChargeType.PRIVATE_SESSION_REFUND
+      );
       getBookedSessions();
     } catch (error) {
       console.log("Error deleting session:", error);
     }
   };
 
-  const registerClass = async (classID: number) => {
+  const registerClass = async (classID: number | null) => {
     console.log("registering class with ID:", classID);
     try {
+      if (!classID) {
+        throw new Error("No Class selected!");
+      }
       await axios.post(
         `http://localhost:8080/groupClasses/${user.memberID}/${classID}/register`,
         null
       );
       console.log("Successfully registered for class");
+      createBill(PurchaseType.GROUP_SESSION, ChargeType.GROUP_SESSION_CHARGE);
       getFitnessClasses();
       getBookedFitnessClasses();
     } catch (error) {
@@ -163,6 +199,7 @@ function ScheduleManagement({ user }: { user: any }) {
         `http://localhost:8080/groupClasses/${user.memberID}/${classID}/unRegister`
       );
       console.log("Successfully un-registered for class");
+      createBill(PurchaseType.GROUP_SESSION, ChargeType.GROUP_SESSION_REFUND);
       getFitnessClasses();
       getBookedFitnessClasses();
     } catch (error) {
@@ -170,20 +207,39 @@ function ScheduleManagement({ user }: { user: any }) {
     }
   };
 
-  // const trainerStillAvailable = async (session: any) => {
-  //   const response = await axios.get(
-  //     `http://localhost:8080/availability/${user.memberID}/getAvailableDays`
-  //   );
-  //   console.log("Successfully retrieved available days for trainer:", response);
-  //   const availableDays = response.data.map((day: any) => day.dayAvailable);
+  const createBill = async (purchaseType: PurchaseType, amount: ChargeType) => {
+    try {
+      await axios.post(
+        `http://localhost:8080/billing/${user.email}/${amount}/${purchaseType}/pay`,
+        null
+      );
+      console.log("Successfully created bill");
+    } catch (error) {
+      console.log("Error creating bill:", error);
+    }
+  };
 
-  //   if (availableDays.includes(session.scheduledDate)) {
-  //     return true;
-  //   } else {
-  //     deleteSession(session.sessionId);
-  //     return false;
-  //   }
-  // };
+  const handleClose = (
+    event: React.SyntheticEvent | Event,
+    reason?: string
+  ) => {
+    if (reason === "clickaway") {
+      return;
+    }
+  };
+
+  const action = (
+    <React.Fragment>
+      <IconButton
+        size="small"
+        aria-label="close"
+        color="inherit"
+        onClick={handleClose}
+      >
+        <CloseIcon fontSize="small" />
+      </IconButton>
+    </React.Fragment>
+  );
 
   useEffect(() => {
     getAvailableTrainers();
@@ -285,7 +341,11 @@ function ScheduleManagement({ user }: { user: any }) {
                                   margin: "5px",
                                 }}
                                 onClick={() =>
-                                  handleBookSession(day.dayAvailable, time)
+                                  setBookingConfirmationPersonal({
+                                    day: day.dayAvailable,
+                                    open: true,
+                                    time,
+                                  })
                                 }
                               >
                                 {time}
@@ -420,7 +480,12 @@ function ScheduleManagement({ user }: { user: any }) {
                       <Button
                         size="small"
                         sx={{ color: "#f9a826" }}
-                        onClick={() => registerClass(fitnessClass.classID)}
+                        onClick={() =>
+                          setBookingConfirmationGroup({
+                            open: true,
+                            id: fitnessClass.classID,
+                          })
+                        }
                       >
                         REGISTER
                       </Button>
@@ -499,6 +564,131 @@ function ScheduleManagement({ user }: { user: any }) {
           )}
         </div>
       </div>
+
+      {/* Billing Confirmation Dialog for Personal Trainer */}
+      <Dialog open={bookingConfirmationPersonal.open} onClose={handleClose}>
+        <DialogTitle id="alert-dialog-title">
+          {`Billing Confirmation`}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {` The total for this session is $${ChargeType.PRIVATE_SESSION_REFUND}. Would you like to proceed?`}
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="cardNumber"
+            label="Card Number"
+            type="text"
+            fullWidth
+          />
+          <TextField
+            margin="dense"
+            id="expiryDate"
+            label="Expiry Date"
+            type="text"
+            fullWidth
+          />
+          <TextField
+            margin="dense"
+            id="cvv"
+            label="CVV"
+            type="password"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() =>
+              setBookingConfirmationPersonal({
+                day: null,
+                open: false,
+                time: null,
+              })
+            }
+            sx={{ color: "#f9a826" }}
+          >
+            CANCEL
+          </Button>
+          <Button
+            onClick={() => {
+              handleBookSession(
+                bookingConfirmationPersonal.day,
+                bookingConfirmationPersonal.time
+              );
+              setBookingConfirmationPersonal({
+                day: null,
+                open: false,
+                time: null,
+              });
+            }}
+            autoFocus
+            sx={{ bgcolor: "#f9a826", color: "white" }}
+          >
+            BOOK
+          </Button>
+        </DialogActions>
+      </Dialog>
+
+      {/* Billing Confirmation Dialog for Group Train */}
+      <Dialog open={bookingConfirmationGroup.open} onClose={handleClose}>
+        <DialogTitle id="alert-dialog-title">
+          {`Billing Confirmation`}
+        </DialogTitle>
+        <DialogContent>
+          <DialogContentText id="alert-dialog-description">
+            {` The total for this session is $${ChargeType.GROUP_SESSION_REFUND}. Would you like to proceed?`}
+          </DialogContentText>
+          <TextField
+            autoFocus
+            margin="dense"
+            id="cardNumber"
+            label="Card Number"
+            type="text"
+            fullWidth
+          />
+          <TextField
+            margin="dense"
+            id="expiryDate"
+            label="Expiry Date"
+            type="text"
+            fullWidth
+          />
+          <TextField
+            margin="dense"
+            id="cvv"
+            label="CVV"
+            type="password"
+            fullWidth
+          />
+        </DialogContent>
+        <DialogActions>
+          <Button
+            onClick={() =>
+              setBookingConfirmationGroup({
+                open: false,
+                id: null,
+              })
+            }
+            sx={{ color: "#f9a826" }}
+          >
+            CANCEL
+          </Button>
+          <Button
+            onClick={() => {
+              registerClass(bookingConfirmationGroup.id);
+              setBookingConfirmationGroup({
+                open: false,
+                id: null,
+              });
+            }}
+            autoFocus
+            sx={{ bgcolor: "#f9a826", color: "white" }}
+          >
+            BOOK
+          </Button>
+        </DialogActions>
+      </Dialog>
     </div>
   );
 }

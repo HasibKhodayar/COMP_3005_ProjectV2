@@ -14,7 +14,7 @@ public class Billing {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "billingID")
-    private Long equipmentId;
+    private Long billingId;
 
 
     @Getter

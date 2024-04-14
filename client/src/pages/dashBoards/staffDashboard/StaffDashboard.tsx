@@ -3,7 +3,7 @@ import axios from "axios";
 import { Button } from "@mui/material";
 import ProfileSettings from "../memberDashboard/ProfileSettings";
 import Dashboard from "./Dashboard";
-import Billing from "./Billing";
+import BillingDetails from "./BillingDetails";
 import ClassSchedules from "./ClassSchedules";
 import EquipmentMaintenance from "./EquipmentMaintenance";
 import RoomBooking from "./RoomBooking";
@@ -120,7 +120,7 @@ const StaffDashboard = ({ user }: { user: any }) => {
         )}
         {activeSection === "billing" && (
           <div>
-            <Billing user={user} />
+            <BillingDetails user={user} />
           </div>
         )}
       </div>

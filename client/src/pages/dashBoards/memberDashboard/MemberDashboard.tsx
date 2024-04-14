@@ -6,6 +6,7 @@ import ProfileSettings from "./ProfileSettings";
 import ScheduleManagement from "./ScheduleManagement";
 import GoalsMetrics from "./GoalsMetrics";
 import Exercises from "./Exercises";
+import BillingDetails from "./BillingDetails";
 
 const MemberDashboard = ({ user }: { user: any }) => {
   const [activeSection, setActiveSection] = useState<string>("dashboard");
@@ -71,6 +72,15 @@ const MemberDashboard = ({ user }: { user: any }) => {
         >
           Schedule Management
         </Button>
+        <Button
+          style={{ color: "white", fontWeight: "bold" }}
+          className={`navbar-button ${
+            activeSection === "billing" ? "active" : ""
+          }`}
+          onClick={() => handleNavClick("billing")}
+        >
+          Billing Details
+        </Button>
       </nav>
       {/* Content for each section */}
       <div
@@ -106,6 +116,11 @@ const MemberDashboard = ({ user }: { user: any }) => {
         {activeSection === "exercises" && (
           <div>
             <Exercises user={user} />
+          </div>
+        )}
+        {activeSection === "billing" && (
+          <div>
+            <BillingDetails user={user} />
           </div>
         )}
       </div>
