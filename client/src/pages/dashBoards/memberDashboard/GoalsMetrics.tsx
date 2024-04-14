@@ -59,10 +59,10 @@ function GoalsMetrics({ user }: { user: any }) {
   const getMetrics = async () => {
     try {
       const metrics = await axios.get(
-        `http://localhost:8080/healthMetrics/${user.memberID}`
+        `http://localhost:8080/healthMetrics/${user.memberID}/getAllMetrics`
       );
       console.log("metrics", metrics);
-      setUserMetrics(metrics.data);
+      setUserMetrics(metrics.data[metrics.data.length - 1]);
     } catch (error) {
       console.log("Error retrieving user metrics:", error);
     }
@@ -118,6 +118,7 @@ function GoalsMetrics({ user }: { user: any }) {
     try {
       // update the existing metric
       if (editUserMetric && userMetrics) {
+        console.log("userMetrics", userMetrics);
         await axios.put(
           `http://localhost:8080/healthMetrics/${userMetrics.id}/updateMetric`,
           {
@@ -128,6 +129,13 @@ function GoalsMetrics({ user }: { user: any }) {
             muscleMass,
           }
         );
+        setUserMetrics({
+          id: userMetrics.id,
+          weight,
+          height,
+          bodyFat,
+          muscleMass,
+        });
       } else {
         await axios.post(`http://localhost:8080/healthMetrics`, {
           member: user,
@@ -136,15 +144,16 @@ function GoalsMetrics({ user }: { user: any }) {
           bodyFat,
           muscleMass,
         });
+        setUserMetrics({
+          weight,
+          height,
+          bodyFat,
+          muscleMass,
+        });
       }
 
       setResultMessage("Successfully updated metric configurations.");
-      setUserMetrics({
-        weight,
-        height,
-        bodyFat,
-        muscleMass,
-      });
+
       setEditUserMetric(false);
       setOpenResult(true);
     } catch (error) {
