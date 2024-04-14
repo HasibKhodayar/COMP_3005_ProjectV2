@@ -25,7 +25,7 @@
 
 ## Demo Video
 
-[DemoVideo]()
+[DemoVideo](https://youtu.be/FKszCou2cyc)
 
 ### Contributors
 - Hajar Assim 101232456
