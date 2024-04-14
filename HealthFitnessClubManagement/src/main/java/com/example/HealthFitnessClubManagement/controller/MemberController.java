@@ -1,6 +1,5 @@
 package com.example.HealthFitnessClubManagement.controller;
 
-;
 import com.example.HealthFitnessClubManagement.model.FitnessGoals;
 import com.example.HealthFitnessClubManagement.model.Member;
 import com.example.HealthFitnessClubManagement.service.*;
