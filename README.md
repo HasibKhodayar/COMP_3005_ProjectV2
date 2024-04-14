@@ -26,3 +26,8 @@
 ## Demo Video
 
 [DemoVideo]()
+
+### Contributors
+- Hajar Assim 101232456
+- Hasib Khodayar 101225523
+
