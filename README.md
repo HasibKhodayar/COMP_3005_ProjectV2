@@ -1,5 +1,5 @@
 # Health and Fitness Club Management System: FitnessTrackr
-Full-stack fitness club platform for managing classes, clients, and progress – built with React + Spring Boot.
+A full-stack health and fitness club management system built with React and Spring Boot. Includes member tracking, class scheduling, trainer assignments, and progress logging.
 
 ## Getting Started
 
